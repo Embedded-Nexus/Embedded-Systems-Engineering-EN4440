@@ -46,7 +46,7 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
-void HandleResponseFrame(){
+void HandleResponseFrame(vector<uint8_t> response){
     //Read Request is Valid
     //Request frame is invalid
     //Request frame is valid but requested data is invalid
@@ -80,6 +80,34 @@ string frameToJson(vector<uint8_t> frame){
     return jsonFrame;
 }
 
+vector<uint8_t> jsontoFrame(string response){
+    //extract the hex string from the JSON response
+    size_t start = response.find("\"frame\":\"");
+    if(start == string::npos) {
+        cerr << "Error: 'frame' key not found in JSON response." << endl;
+        return {};
+    }
+
+    start += 9;
+    size_t end = response.find("\"", start);
+    if(end == string::npos) {
+        cerr << "Error: Invalid JSON format." << endl;
+        return {};
+    }
+
+    string hexString = response.substr(start, end - start);
+    cout << "Extracted Hex String: " << hexString << endl;
+    vector<uint8_t> frame;
+    // Extract hex string from JSON response
+    for(int i=0; i<hexString.size(); i+=2){
+        uint8_t byte = stoi(hexString.substr(i, 2), nullptr, 16);
+        frame.push_back(byte);
+    }
+    // Parse JSON to extract hex string
+    // Convert hex string back to byte vector
+    return frame;
+}
+
 //Helper function for libCurl to handle response data
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* output) {
     output->append((char*)contents, size * nmemb);
@@ -111,7 +139,7 @@ string readAPI(const string& jsonFrame, const string& apiKey) {
             cerr << "curl_easy_perform() failed: " 
                       << curl_easy_strerror(res) << endl;
         } else {
-            cout << "Response: " << response << endl;
+            // cout << "Response: " << response << endl;
         }
 
         curl_slist_free_all(headers);
@@ -145,7 +173,7 @@ string writeAPI(const string& jsonFrame, const string& apiKey) {
             cerr << "curl_easy_perform() failed: " 
                       << curl_easy_strerror(res) << endl;
         } else {
-            cout << "Response: " << response << endl;
+            // cout << "Response: " << response << endl;
         }
 
         curl_slist_free_all(headers);
@@ -154,13 +182,19 @@ string writeAPI(const string& jsonFrame, const string& apiKey) {
     return response;
 }
 
+//Main Function of the Program
 int main() {
+    // API Key
+    string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
+    string response;
     // Example usage
-    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0008, 0x000A);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0007, 0x000A);
     string jsonFrame = frameToJson(requestFrame);
     cout << jsonFrame << endl;
-    string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
     //readAPI(jsonFrame, apiKey);
-    writeAPI(jsonFrame, apiKey);
+    response = writeAPI(jsonFrame, apiKey);
+    vector<uint8_t> responseFrame = jsontoFrame(response);
+    HandleResponseFrame(responseFrame);
+    cout << response << endl;
     return 0;
 }
