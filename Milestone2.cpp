@@ -44,7 +44,7 @@ void logError(const string& msg) {
     auto now = chrono::system_clock::now();
     time_t now_c = chrono::system_clock::to_time_t(now);
     tm local_tm{};
-    localtime_s(&local_tm, &now_c); // Windows
+    localtime_s(&local_tm, &now_c); 
     cerr << "[ERROR] " << put_time(&local_tm, "%H:%M:%S")
          << " - " << msg << endl;
 }
@@ -76,6 +76,7 @@ uint16_t modbusCRC(uint8_t *buf, int len) {
     return crc;
 }
 
+//CRC Validation
 bool validateCRC(const vector<uint8_t>& responseFrame){
     uint16_t receivedCRC = responseFrame[responseFrame.size()-2] | (responseFrame[responseFrame.size()-1] << 8);
     uint16_t calculatedCRC = modbusCRC((uint8_t*)responseFrame.data(), responseFrame.size() - 2);
@@ -102,6 +103,7 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
+//Decode the Response Frame
 void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t startAddr){
     uint8_t funcCode = validresponseFrame[1];
 
@@ -109,8 +111,11 @@ void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t sta
         uint8_t byteCount = validresponseFrame[2];
         uint8_t numRegisters = byteCount / 2;
 
+        auto snapshotTime = chrono::system_clock::now();  
+        vector<Sample> snapshot;  // collect this read’s samples
+
         for(uint16_t j = 0; j < numRegisters; j++){
-            uint16_t regAddr = startAddr + j; // actual register address
+            uint16_t regAddr = startAddr + j;
             uint16_t rawValue = (validresponseFrame[3 + j*2] << 8) |
                                  validresponseFrame[4 + j*2];
 
@@ -118,23 +123,20 @@ void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t sta
                 const auto& regInfo = registerMap[regAddr];
                 double scaledValue = static_cast<double>(rawValue) / regInfo.gain;
 
-                cout << "Register " << regAddr 
-                     << " (" << regInfo.name << "): "
-                     << scaledValue << " " << regInfo.unit
-                     << " [raw=" << rawValue << "]" << endl;
+                // cout << "Register " << regAddr 
+                //      << " (" << regInfo.name << "): "
+                //      << scaledValue << " " << regInfo.unit
+                //      << " [raw=" << rawValue << "]" << endl;
 
-                // Store in data buffer
-                Sample s;
-                s.timestamp = chrono::system_clock::now();
-                s.regAddr = regAddr;
-                s.value = scaledValue;
-                dataBuffer.push_back(s);    
-
-
+                // add to snapshot instead of pushing immediately
+                snapshot.push_back({ snapshotTime, regAddr, scaledValue });
             } else {
                 cout << "Register " << regAddr << ": " << rawValue << " (Unknown)" << endl;
             }
         }
+
+        // after collecting, append entire snapshot into dataBuffer
+        dataBuffer.insert(dataBuffer.end(), snapshot.begin(), snapshot.end());
     }
     else if(funcCode == 0x06){ // Write Single Register
         uint16_t addr = (validresponseFrame[2] << 8) | validresponseFrame[3];
@@ -156,7 +158,7 @@ void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t sta
 }
 
 
-
+//Response Frame Validation
 string ValidateResponseFrame(vector<uint8_t> responseFrame){
     //Request frame is invalid
     if(responseFrame.empty()){
@@ -164,7 +166,7 @@ string ValidateResponseFrame(vector<uint8_t> responseFrame){
     }
     else{
         if(validateCRC(responseFrame)){
-                cout << "CRC Check Passed." << endl;
+            logInfo("CRC Check Passed");
             //Request frame is valid but requested data is invalid
             uint8_t funcCode  = responseFrame[1];
             if (funcCode & 0x80) {
@@ -189,7 +191,7 @@ string ValidateResponseFrame(vector<uint8_t> responseFrame){
             }
             else{
                 //Valid response frame
-                cout << "Valid Response Frame Received." << endl;
+                // cout << "Valid Response Frame Received." << endl;
                 return "validResponseFrame";
             }
         }
@@ -200,8 +202,48 @@ string ValidateResponseFrame(vector<uint8_t> responseFrame){
     return "invalidResponseFrame";
 }
 
-////////////Functions Required for CloudAPI Inverter Sim//////////////
+string readfromInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        string resp = readAPI(jsonFrame, apiKey);
 
+        if (!resp.empty()) {
+            auto respFrame = jsontoFrame(resp);
+            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
+                logInfo("Valid Response Frame Received");
+                logInfo("Read successful on attempt " + to_string(attempt));
+                return resp; // success
+            }
+        }
+
+        logError("Read attempt " + to_string(attempt) + " failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    logError("All retries failed. Giving up.");
+    return "";
+}
+
+string writetoInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        string resp = writeAPI(jsonFrame, apiKey);
+
+        if (!resp.empty()) {
+            auto respFrame = jsontoFrame(resp);
+            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
+                logInfo("Write successful on attempt " + to_string(attempt));
+                return resp; 
+            }
+        }
+
+        logError("Write attempt " + to_string(attempt) + " failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    logError("All write retries failed. Giving up.");
+    return "";
+}
+
+////////////Functions Required for CloudAPI Inverter Sim//////////////
 string frameToJson(vector<uint8_t> frame){
     // Convert to hex string
     ostringstream oss;
@@ -222,14 +264,12 @@ vector<uint8_t> jsontoFrame(string response){
     size_t start = response.find("\"frame\":\"");
     if(start == string::npos) {
         cerr << "Error: 'frame' key not found in JSON response." << endl;
-        return {};
     }
 
     start += 9;
     size_t end = response.find("\"", start);
     if(end == string::npos) {
         cerr << "Error: Invalid JSON format." << endl;
-        return {};
     }
 
     string hexString = response.substr(start, end - start);
@@ -319,47 +359,6 @@ string writeAPI(const string& jsonFrame, const string& apiKey) {
     return response;
 }
 
-
-string readfromInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
-    for (int attempt = 1; attempt <= maxRetries; attempt++) {
-        string resp = readAPI(jsonFrame, apiKey);
-
-        if (!resp.empty()) {
-            auto respFrame = jsontoFrame(resp);
-            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
-                logInfo("Read successful on attempt " + to_string(attempt));
-                return resp; // success
-            }
-        }
-
-        logError("Read attempt " + to_string(attempt) + " failed. Retrying...");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-    logError("All retries failed. Giving up.");
-    return "";
-}
-
-string writetoInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
-    for (int attempt = 1; attempt <= maxRetries; attempt++) {
-        string resp = writeAPI(jsonFrame, apiKey);
-
-        if (!resp.empty()) {
-            auto respFrame = jsontoFrame(resp);
-            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
-                logInfo("Write successful on attempt " + to_string(attempt));
-                return resp; 
-            }
-        }
-
-        logError("Write attempt " + to_string(attempt) + " failed. Retrying...");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-    logError("All write retries failed. Giving up.");
-    return "";
-}
-
 struct TestCase {
     vector<uint8_t> frame;
     uint16_t startAddr;
@@ -377,37 +376,52 @@ TestCase getTestCase(size_t index) {
         case 6:  return { BuildRequestFrame(0x11, 0x03, 0x0007, 0x0002), 7 };      // Read near writable zone
 
         case 7:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0032), 8 };      // Valid write (50%)
-        case 8:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x00C8), 8 };      // Valid write (200%)
-        case 9:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0000), 8 };      // Write boundary (0%)
-        case 10: return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0064), 8 };      // Write 100%
-        case 11: return { BuildRequestFrame(0x11, 0x06, 0x0001, 0x0020), 1 };      // Invalid write (non-writable)
-        case 12: return { BuildRequestFrame(0x11, 0x06, 0xFFFF, 0x0010), 0xFFFF }; // Invalid write (illegal addr)
-        case 13: return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x07D0), 8 };      // Extreme write (2000%)
-        case 14: return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x000A), 8 };      // Small write (10%)
-
-        default: return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005), 5 };      // Fallback
+        case 8:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      // Normal read
+        case 9:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x00C8), 8 };      // Valid write (200%)
+        case 10:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      // Normal read
+        default: return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005), 5 };      // fallback
     }
 }
 
 
+// Function to print the data buffer
 void printDataBuffer() {
     cout << "\n==== Logged Data Buffer ====\n";
+
+    if (dataBuffer.empty()) {
+        cout << "Buffer is empty.\n";
+        cout << "============================\n";
+        return;
+    }
+
+    time_t lastTime = 0;
     for (const auto& s : dataBuffer) {
         time_t t = chrono::system_clock::to_time_t(s.timestamp);
-        tm local_tm{};
-        localtime_s(&local_tm, &t);
 
-        cout << put_time(&local_tm, "%H:%M:%S")
-             << " | Reg " << s.regAddr
-             << " | Value: " << s.value;
+        // if this sample belongs to a new snapshot, print a header
+        if (t != lastTime) {
+            tm local_tm{};
+            localtime_s(&local_tm, &t);
+            cout << "\nUpdated Registers @ " << put_time(&local_tm, "%H:%M:%S") << "\n";
+            lastTime = t;
+        }
+
+        // print register info
+        cout << "  Reg " << s.regAddr;
+        if (s.regAddr < registerMap.size()) {
+            cout << " (" << registerMap[s.regAddr].name << ")";
+        }
+        cout << ": " << s.value;
 
         if (s.regAddr < registerMap.size()) {
             cout << " " << registerMap[s.regAddr].unit;
         }
         cout << endl;
     }
+
     cout << "============================\n";
 }
+
 
 
 int main() {
@@ -415,38 +429,37 @@ int main() {
     string response, jsonFrame;
     vector<uint8_t> responseFrame;
 
-    const size_t totalCases = 15;  // number of test cases
+    const size_t totalCases = 11;
     size_t caseIndex = 0;
 
-    size_t loops = 0;
-    const size_t maxloops = 5; // configurable
+    auto windowStart = chrono::steady_clock::now();
 
-    while (loops<maxloops) {
+    while (true) {
         TestCase tc = getTestCase(caseIndex);
         logInfo("Running test case " + to_string(caseIndex+1));
 
         jsonFrame = frameToJson(tc.frame);
 
-        // decide whether read or write based on function code
-        if (tc.frame[1] == 0x03) {
+        if (tc.frame[1] == 0x03)
             response = readfromInverter(jsonFrame, apiKey);
-        } else {
+        else
             response = writetoInverter(jsonFrame, apiKey);
-        }
 
         responseFrame = jsontoFrame(response);
-        if (ValidateResponseFrame(responseFrame) == "validResponseFrame") {
-            decodeResponseFrame(responseFrame, tc.startAddr);
-        }
+        decodeResponseFrame(responseFrame, tc.startAddr); 
 
-        // move to next case
         caseIndex = (caseIndex + 1) % totalCases;
 
-        this_thread::sleep_for(chrono::seconds(5)); // configurable
-        loops++;
+        auto now = chrono::steady_clock::now();
+        if (chrono::duration_cast<chrono::seconds>(now - windowStart).count() >= 30) {
+            logInfo("30-second window complete. Dumping buffer...");
+            printDataBuffer();   // print all samples collected
+            dataBuffer.clear();  // flush
+            windowStart = now;   // restart timer
+        }
+        cout << "----------------------------------------\n";
+        std::this_thread::sleep_for(std::chrono::seconds(5)); // poll every 5s
     }
-
-    printDataBuffer();
 
     return 0;
 }
