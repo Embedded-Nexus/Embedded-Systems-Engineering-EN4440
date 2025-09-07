@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
 #include <cstdint>
 
 using namespace std;
@@ -44,42 +45,47 @@ uint16_t modbusCRC(uint8_t *buf, int len) {
     return crc;
 }
 
-//Build the read frame in JSON format
-string BuildReadFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t startAddr, uint16_t numReg){
-    
+//Build the Request Frame
+vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t startAddr, uint16_t numReg){
     // Construct the frame(slave address, function code, start address, number of registers)
-    uint8_t frame[6]={
-        slaveAddr,
-        funcCode,
-        static_cast<uint8_t>((startAddr >> 8) & 0xFF),
-        static_cast<uint8_t>(startAddr & 0xFF),
-        static_cast<uint8_t>((numReg >> 8) & 0xFF),
-        static_cast<uint8_t>(numReg & 0xFF)
-    };
+    vector<uint8_t> frame(8);
 
-    // Calculate CRC
-    uint16_t crc = modbusCRC(frame, 6);
+        frame[0] = slaveAddr;
+        frame[1] = funcCode;
+        frame[2] = static_cast<uint8_t>((startAddr >> 8) & 0xFF);
+        frame[3] = static_cast<uint8_t>(startAddr & 0xFF);
+        frame[4] = static_cast<uint8_t>((numReg >> 8) & 0xFF);
+        frame[5] = static_cast<uint8_t>(numReg & 0xFF);
 
+        // Calculate CRC
+        uint16_t crc = modbusCRC(frame.data(), 6);
+        // Append CRC to frame
+        frame[6] = crc & 0xFF;        // low byte
+        frame[7] = (crc >> 8) & 0xFF; // high byte
+        return frame;
+}
+
+
+string frameToJson(vector<uint8_t> frame){
     // Convert to hex string
     ostringstream oss;
+    // Format settings(Upper case and zero padding)
     oss << uppercase << hex << setfill('0');
-
-    for(int i=0; i<6; i++){
+    //Loop over the frame to convert each byte to hex
+    for(int i=0; i<frame.size(); i++){ // Update loop to use frame.size()
         oss << setw(2) << (int)frame[i];
     }
-    oss << setw(2) << (crc & 0xFF);        // low byte
-    oss << setw(2) << ((crc >> 8) & 0xFF); // high byte
-
     string hexFrame = oss.str();
-
     // Wrap into JSON
     string jsonFrame = "{\"frame\":\"" + hexFrame + "\"}";
-    cout << jsonFrame << endl;
     return jsonFrame;
 }
 
 int main() {
     // Example usage
-    BuildReadFrame(0x01, 0x03, 0x0000, 0x0002);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x01, 0x03, 0x0000, 0x0002);
+    string jsonFrame = frameToJson(requestFrame);
+    cout << jsonFrame << endl;
+
     return 0;
 }
