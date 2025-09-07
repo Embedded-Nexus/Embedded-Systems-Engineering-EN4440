@@ -52,6 +52,27 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
+void decodeResponseFrame(vector<uint8_t> validresponseFrame){
+    uint8_t funcCode = validresponseFrame[1];
+    if(funcCode == 0x03){ //Read holding Registers
+        uint8_t byteCount = validresponseFrame[2];
+        uint8_t numRegisters = byteCount / 2;
+        for(size_t  i=0; i<numRegisters; i++){
+            uint16_t regValue = (validresponseFrame[3 + i*2] << 8) | validresponseFrame[4 + i*2];
+            cout << "Register " << i+1 << ": " << regValue << endl;
+        }
+    }
+    else if(funcCode == 0x06){ //Write Single Register
+        uint16_t addr = (validresponseFrame[2] << 8) | validresponseFrame[3];
+        cout << "Written to Address: " << addr << endl;
+        uint16_t value = (validresponseFrame[4] << 8) | validresponseFrame[5];
+        cout << "Written Value: " << value << endl;
+    }
+    else{
+        cout << "Function Code not supported for decoding." << endl;
+    }
+}
+
 void ValidateResponseFrame(vector<uint8_t> responseFrame){
     //Request frame is invalid
     if(responseFrame.empty()){
@@ -94,9 +115,6 @@ void ValidateResponseFrame(vector<uint8_t> responseFrame){
     }
 }
 
-void decodeResponseFrame(vector<uint8_t> validresponseFrame){
-    
-}
 // void writetoInverter(){
 //     writeAPI();
 // }
@@ -229,10 +247,10 @@ int main() {
     string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
     string response;
     // Example usage
-    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0008, 0x000A);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x03, 0x0001, 0x0005);
     string jsonFrame = frameToJson(requestFrame);
-    //readAPI(jsonFrame, apiKey);
-    response = writeAPI(jsonFrame, apiKey);
+    response = readAPI(jsonFrame, apiKey);
+    //response = writeAPI(jsonFrame, apiKey);
     vector<uint8_t> responseFrame = jsontoFrame(response);
     ValidateResponseFrame(responseFrame);
     cout << response << endl;
