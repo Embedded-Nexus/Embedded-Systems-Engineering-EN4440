@@ -26,6 +26,12 @@ uint16_t modbusCRC(uint8_t *buf, int len) {
     return crc;
 }
 
+bool validateCRC(const vector<uint8_t>& responseFrame){
+    uint16_t receivedCRC = responseFrame[responseFrame.size()-2] | (responseFrame[responseFrame.size()-1] << 8);
+    uint16_t calculatedCRC = modbusCRC((uint8_t*)responseFrame.data(), responseFrame.size() - 2);
+    return receivedCRC == calculatedCRC;
+}
+
 //Build the Request Frame
 vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t startAddr, uint16_t numReg){
     // Construct the frame(slave address, function code, start address, number of registers)
@@ -46,16 +52,51 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
-void HandleResponseFrame(vector<uint8_t> response){
-    //Read Request is Valid
+void ValidateResponseFrame(vector<uint8_t> responseFrame){
     //Request frame is invalid
-    //Request frame is valid but requested data is invalid
-
-    //Write request is valid and successful
-    //Requst frame is invalid
-    //Request frame is valid requested information is invalid
+    if(responseFrame.empty()){
+        cerr << "Error: Invalid Request Frame." << endl;
+    }
+    else{
+        if(validateCRC(responseFrame)){
+                cout << "CRC Check Passed." << endl;
+            //Request frame is valid but requested data is invalid
+            uint8_t funcCode  = responseFrame[1];
+            if (funcCode & 0x80) {
+                uint8_t exceptionCode = responseFrame[2];
+                switch (exceptionCode) {
+                    case 0x01:
+                        cerr << "Error: Illegal Function." << endl;
+                        break;
+                    case 0x02:
+                        cerr << "Error: Illegal Data Address." << endl;
+                        break;
+                    case 0x03:
+                        cerr << "Error: Illegal Data Value." << endl;
+                        break;
+                    case 0x04:
+                        cerr << "Error: Slave Device Failure." << endl;
+                        break;
+                    default:
+                        cerr << "Error: Unknown Exception Code." << endl;
+                        break;
+                }
+            }
+            else{
+                //Valid response frame
+                cout << "Valid Response Frame Received." << endl;
+                decodeResponseFrame(responseFrame);
+            }
+        }
+        else{
+            cerr << "Error: CRC Check Failed." << endl;
+        }
+    }
 }
 
+void decodeResponseFrame(vector<uint8_t> validresponseFrame){
+    
+}
 // void writetoInverter(){
 //     writeAPI();
 // }
@@ -188,13 +229,12 @@ int main() {
     string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
     string response;
     // Example usage
-    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0007, 0x000A);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0008, 0x000A);
     string jsonFrame = frameToJson(requestFrame);
-    cout << jsonFrame << endl;
     //readAPI(jsonFrame, apiKey);
     response = writeAPI(jsonFrame, apiKey);
     vector<uint8_t> responseFrame = jsontoFrame(response);
-    HandleResponseFrame(responseFrame);
+    ValidateResponseFrame(responseFrame);
     cout << response << endl;
     return 0;
 }
