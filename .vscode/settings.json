@@ -4,6 +4,10 @@
         "vector": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "chrono": "cpp",
+        "text_encoding": "cpp",
+        "typeindex": "cpp",
+        "typeinfo": "cpp"
     }
 }
