@@ -4,29 +4,10 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <curl/curl.h>
+
 
 using namespace std;
-
-void SendReadFrame(){}
-
-void extractFrame(){}
-void CRCCheck(){}
-void decoder(){}
-
-void ReadDataFrame(){
-    extractFrame();
-    CRCCheck();
-    decoder();
-}
-
-
-void Scheduler(){}
-
-void BuildWriteFrame(){}
-void WriteandVerify(){}
-void errorPolicy(){}
-
-void demo(){}
 
 // CRC16 (Modbus)
 uint16_t modbusCRC(uint8_t *buf, int len) {
@@ -65,6 +46,24 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
+void HandleResponseFrame(){
+    //Read Request is Valid
+    //Request frame is invalid
+    //Request frame is valid but requested data is invalid
+
+    //Write request is valid and successful
+    //Requst frame is invalid
+    //Request frame is valid requested information is invalid
+}
+
+// void writetoInverter(){
+//     writeAPI();
+// }
+// void readfromInverter(){
+//     readAPI();
+// }
+
+////////////Functions Required for CloudAPI Inverter Sim//////////////
 
 string frameToJson(vector<uint8_t> frame){
     // Convert to hex string
@@ -81,11 +80,87 @@ string frameToJson(vector<uint8_t> frame){
     return jsonFrame;
 }
 
+//Helper function for libCurl to handle response data
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* output) {
+    output->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+string readAPI(const string& jsonFrame, const string& apiKey) {
+    CURL* curl;
+    CURLcode res;
+    string response;
+
+    curl = curl_easy_init();
+    if(curl) {
+        struct curl_slist* headers = NULL;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+
+        string authHeader = "Authorization: " + apiKey;
+        headers = curl_slist_append(headers, authHeader.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://20.15.114.131:8080/api/inverter/read");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonFrame.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        res = curl_easy_perform(curl);
+        if(res != CURLE_OK) {
+            cerr << "curl_easy_perform() failed: " 
+                      << curl_easy_strerror(res) << endl;
+        } else {
+            cout << "Response: " << response << endl;
+        }
+
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+    }
+    return response;
+}
+
+string writeAPI(const string& jsonFrame, const string& apiKey) {
+    CURL* curl;
+    CURLcode res;
+    string response;
+
+    curl = curl_easy_init();
+    if(curl) {
+        struct curl_slist* headers = NULL;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+
+        string authHeader = "Authorization: " + apiKey;
+        headers = curl_slist_append(headers, authHeader.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://20.15.114.131:8080/api/inverter/write");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonFrame.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        res = curl_easy_perform(curl);
+        if(res != CURLE_OK) {
+            cerr << "curl_easy_perform() failed: " 
+                      << curl_easy_strerror(res) << endl;
+        } else {
+            cout << "Response: " << response << endl;
+        }
+
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+    }
+    return response;
+}
+
 int main() {
     // Example usage
-    vector<uint8_t> requestFrame = BuildRequestFrame(0x01, 0x03, 0x0000, 0x0002);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x06, 0x0008, 0x000A);
     string jsonFrame = frameToJson(requestFrame);
     cout << jsonFrame << endl;
-
+    string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
+    //readAPI(jsonFrame, apiKey);
+    writeAPI(jsonFrame, apiKey);
     return 0;
 }
