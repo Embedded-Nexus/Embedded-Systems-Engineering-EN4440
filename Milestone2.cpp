@@ -9,6 +9,27 @@
 
 using namespace std;
 
+struct RegisterInfo {
+    string name;
+    uint16_t gain;
+    string unit;
+    bool writable;
+};
+
+vector<RegisterInfo> registerMap = {
+    {"Vac1 / L1 Phase voltage", 10, "V", false},
+    {"Iac1 / L1 Phase current", 10, "A", false},
+    {"Fac1 / L1 Phase frequency", 100, "Hz", false},
+    {"Vpv1 / PV1 input voltage", 10, "V", false},
+    {"Vpv2 / PV2 input voltage", 10, "V", false},
+    {"Ipv1 / PV1 input current", 10, "A", false},
+    {"Ipv2 / PV2 input current", 10, "A", false},
+    {"Inverter internal temperature", 10, "°C", false},
+    {"Export power percentage", 1, "%", true},
+    {"Pac L / Inverter output power", 1, "W", false}
+};
+
+
 // CRC16 (Modbus)
 uint16_t modbusCRC(uint8_t *buf, int len) {
     uint16_t crc = 0xFFFF;
@@ -52,28 +73,53 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
-void decodeResponseFrame(vector<uint8_t> validresponseFrame){
+void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t startAddr){
     uint8_t funcCode = validresponseFrame[1];
-    if(funcCode == 0x03){ //Read holding Registers
+
+    if(funcCode == 0x03){ // Read Holding Registers
         uint8_t byteCount = validresponseFrame[2];
         uint8_t numRegisters = byteCount / 2;
-        for(size_t  i=0; i<numRegisters; i++){
-            uint16_t regValue = (validresponseFrame[3 + i*2] << 8) | validresponseFrame[4 + i*2];
-            cout << "Register " << i+1 << ": " << regValue << endl;
+
+        for(uint16_t j = 0; j < numRegisters; j++){
+            uint16_t regAddr = startAddr + j; // actual register address
+            uint16_t rawValue = (validresponseFrame[3 + j*2] << 8) |
+                                 validresponseFrame[4 + j*2];
+
+            if (regAddr < registerMap.size()) {
+                const auto& regInfo = registerMap[regAddr];
+                double scaledValue = static_cast<double>(rawValue) / regInfo.gain;
+
+                cout << "Register " << regAddr 
+                     << " (" << regInfo.name << "): "
+                     << scaledValue << " " << regInfo.unit
+                     << " [raw=" << rawValue << "]" << endl;
+            } else {
+                cout << "Register " << regAddr << ": " << rawValue << " (Unknown)" << endl;
+            }
         }
     }
-    else if(funcCode == 0x06){ //Write Single Register
+    else if(funcCode == 0x06){ // Write Single Register
         uint16_t addr = (validresponseFrame[2] << 8) | validresponseFrame[3];
-        cout << "Written to Address: " << addr << endl;
         uint16_t value = (validresponseFrame[4] << 8) | validresponseFrame[5];
-        cout << "Written Value: " << value << endl;
+
+        if (addr < registerMap.size()) {
+            const auto& regInfo = registerMap[addr];
+            cout << "Write success -> " << regInfo.name
+                 << " (Reg " << addr << ") set to "
+                 << value << " " << regInfo.unit << endl;
+        } else {
+            cout << "Write success -> Address " << addr 
+                 << " set to " << value << endl;
+        }
     }
     else{
         cout << "Function Code not supported for decoding." << endl;
     }
 }
 
-void ValidateResponseFrame(vector<uint8_t> responseFrame){
+
+
+string ValidateResponseFrame(vector<uint8_t> responseFrame){
     //Request frame is invalid
     if(responseFrame.empty()){
         cerr << "Error: Invalid Request Frame." << endl;
@@ -106,13 +152,14 @@ void ValidateResponseFrame(vector<uint8_t> responseFrame){
             else{
                 //Valid response frame
                 cout << "Valid Response Frame Received." << endl;
-                decodeResponseFrame(responseFrame);
+                return "validResponseFrame";
             }
         }
         else{
             cerr << "Error: CRC Check Failed." << endl;
         }
     }
+    return "invalidResponseFrame";
 }
 
 // void writetoInverter(){
@@ -246,13 +293,17 @@ int main() {
     // API Key
     string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw==";
     string response;
+    uint16_t startAddr = 5; // Starting address for reading registers
     // Example usage
-    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x03, 0x0001, 0x0005);
+    vector<uint8_t> requestFrame = BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005);
     string jsonFrame = frameToJson(requestFrame);
     response = readAPI(jsonFrame, apiKey);
     //response = writeAPI(jsonFrame, apiKey);
     vector<uint8_t> responseFrame = jsontoFrame(response);
-    ValidateResponseFrame(responseFrame);
+    if(ValidateResponseFrame(responseFrame) == "validResponseFrame"){
+        decodeResponseFrame(responseFrame, startAddr);
+    }
+    
     cout << response << endl;
     return 0;
 }
