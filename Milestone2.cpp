@@ -103,6 +103,51 @@ vector<uint8_t> BuildRequestFrame(uint8_t slaveAddr, uint8_t funcCode, uint16_t 
         return frame;
 }
 
+//Response Frame Validation
+string ValidateResponseFrame(vector<uint8_t> responseFrame){
+    //Request frame is invalid
+    if(responseFrame.empty()){
+        cerr << "Error: Invalid Request Frame." << endl;
+    }
+    else{
+        if(validateCRC(responseFrame)){ 
+            logInfo("CRC Check Passed");
+            //Request frame is valid but requested data is invalid
+            uint8_t funcCode  = responseFrame[1];
+            if (funcCode & 0x80) {
+                uint8_t exceptionCode = responseFrame[2];
+                switch (exceptionCode) {
+                    case 0x01:
+                        cerr << "Error: Illegal Function." << endl;
+                        break;
+                    case 0x02:
+                        cerr << "Error: Illegal Data Address." << endl;
+                        break;
+                    case 0x03:
+                        cerr << "Error: Illegal Data Value." << endl;
+                        break;
+                    case 0x04:
+                        cerr << "Error: Slave Device Failure." << endl;
+                        break;
+                    default:
+                        cerr << "Error: Unknown Exception Code." << endl;
+                        break;
+                }
+            }
+            else{
+                //Valid response frame
+                // cout << "Valid Response Frame Received." << endl;
+                return "validResponseFrame";
+            }
+        }
+        else{
+            cerr << "Error: CRC Check Failed." << endl;
+        }
+    }
+    return "invalidResponseFrame";
+}
+
+
 //Decode the Response Frame
 void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t startAddr){
     uint8_t funcCode = validresponseFrame[1];
@@ -158,90 +203,6 @@ void decodeResponseFrame(const vector<uint8_t>& validresponseFrame, uint16_t sta
 }
 
 
-//Response Frame Validation
-string ValidateResponseFrame(vector<uint8_t> responseFrame){
-    //Request frame is invalid
-    if(responseFrame.empty()){
-        cerr << "Error: Invalid Request Frame." << endl;
-    }
-    else{
-        if(validateCRC(responseFrame)){
-            logInfo("CRC Check Passed");
-            //Request frame is valid but requested data is invalid
-            uint8_t funcCode  = responseFrame[1];
-            if (funcCode & 0x80) {
-                uint8_t exceptionCode = responseFrame[2];
-                switch (exceptionCode) {
-                    case 0x01:
-                        cerr << "Error: Illegal Function." << endl;
-                        break;
-                    case 0x02:
-                        cerr << "Error: Illegal Data Address." << endl;
-                        break;
-                    case 0x03:
-                        cerr << "Error: Illegal Data Value." << endl;
-                        break;
-                    case 0x04:
-                        cerr << "Error: Slave Device Failure." << endl;
-                        break;
-                    default:
-                        cerr << "Error: Unknown Exception Code." << endl;
-                        break;
-                }
-            }
-            else{
-                //Valid response frame
-                // cout << "Valid Response Frame Received." << endl;
-                return "validResponseFrame";
-            }
-        }
-        else{
-            cerr << "Error: CRC Check Failed." << endl;
-        }
-    }
-    return "invalidResponseFrame";
-}
-
-string readfromInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
-    for (int attempt = 1; attempt <= maxRetries; attempt++) {
-        string resp = readAPI(jsonFrame, apiKey);
-
-        if (!resp.empty()) {
-            auto respFrame = jsontoFrame(resp);
-            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
-                logInfo("Valid Response Frame Received");
-                logInfo("Read successful on attempt " + to_string(attempt));
-                return resp; // success
-            }
-        }
-
-        logError("Read attempt " + to_string(attempt) + " failed. Retrying...");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-    logError("All retries failed. Giving up.");
-    return "";
-}
-
-string writetoInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
-    for (int attempt = 1; attempt <= maxRetries; attempt++) {
-        string resp = writeAPI(jsonFrame, apiKey);
-
-        if (!resp.empty()) {
-            auto respFrame = jsontoFrame(resp);
-            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
-                logInfo("Write successful on attempt " + to_string(attempt));
-                return resp; 
-            }
-        }
-
-        logError("Write attempt " + to_string(attempt) + " failed. Retrying...");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-    logError("All write retries failed. Giving up.");
-    return "";
-}
 
 ////////////Functions Required for CloudAPI Inverter Sim//////////////
 string frameToJson(vector<uint8_t> frame){
@@ -259,31 +220,46 @@ string frameToJson(vector<uint8_t> frame){
     return jsonFrame;
 }
 
-vector<uint8_t> jsontoFrame(string response){
-    //extract the hex string from the JSON response
+// Convert JSON response to frame
+vector<uint8_t> jsontoFrame(const string& response) {
+    if (response.empty()) {
+        cerr << "Error: Empty JSON response." << endl;
+        return {};
+    }
+
     size_t start = response.find("\"frame\":\"");
-    if(start == string::npos) {
-        cerr << "Error: 'frame' key not found in JSON response." << endl;
+    if (start == string::npos) {
+        cerr << "Error: 'frame' key not found in JSON response. Raw response: " << response << endl;
+        return {};
     }
 
     start += 9;
     size_t end = response.find("\"", start);
-    if(end == string::npos) {
-        cerr << "Error: Invalid JSON format." << endl;
+    if (end == string::npos) {
+        cerr << "Error: Invalid JSON format. Raw response: " << response << endl;
+        return {};
     }
 
     string hexString = response.substr(start, end - start);
-    //cout << "Extracted Hex String: " << hexString << endl;
-    vector<uint8_t> frame;
-    // Extract hex string from JSON response
-    for(int i=0; i<hexString.size(); i+=2){
-        uint8_t byte = stoi(hexString.substr(i, 2), nullptr, 16);
-        frame.push_back(byte);
+    if (hexString.empty()) {
+        cerr << "Error: Extracted hex string is empty." << endl;
+        return {};
     }
-    // Parse JSON to extract hex string
-    // Convert hex string back to byte vector
+
+    vector<uint8_t> frame;
+    try {
+        for (size_t i = 0; i < hexString.size(); i += 2) {
+            uint8_t byte = stoi(hexString.substr(i, 2), nullptr, 16);
+            frame.push_back(byte);
+        }
+    } catch (const std::exception& e) {
+        cerr << "Error while parsing hex string: " << e.what() << endl;
+        return {};
+    }
+
     return frame;
 }
+
 
 //Helper function for libCurl to handle response data
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, string* output) {
@@ -358,6 +334,48 @@ string writeAPI(const string& jsonFrame, const string& apiKey) {
     }
     return response;
 }
+/////////////////////////////////////
+
+string readfromInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        string resp = readAPI(jsonFrame, apiKey);
+
+        if (!resp.empty()) {
+            auto respFrame = jsontoFrame(resp);
+            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
+                logInfo("Valid Response Frame Received");
+                logInfo("Read successful on attempt " + to_string(attempt));
+                return resp; // success
+            }
+        }
+
+        logError("Read attempt " + to_string(attempt) + " failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    logError("All retries failed. Giving up.");
+    return "";
+}
+
+string writetoInverter(const string& jsonFrame, const string& apiKey, int maxRetries = 3) {
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        string resp = writeAPI(jsonFrame, apiKey);
+
+        if (!resp.empty()) {
+            auto respFrame = jsontoFrame(resp);
+            if (ValidateResponseFrame(respFrame) == "validResponseFrame") {
+                logInfo("Write successful on attempt " + to_string(attempt));
+                return resp; 
+            }
+        }
+
+        logError("Write attempt " + to_string(attempt) + " failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    logError("All write retries failed. Giving up.");
+    return "";
+}
 
 struct TestCase {
     vector<uint8_t> frame;
@@ -367,24 +385,24 @@ struct TestCase {
 // Function to build and return test cases
 TestCase getTestCase(size_t index) {
     switch (index) {
-        case 0:  return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005), 5 };      // Normal read
-        case 1:  return { BuildRequestFrame(0x11, 0x03, 0x0000, 0x0002), 0 };      // Edge read
-        case 2:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x000A), 8 };      // Larger read
-        case 3:  return { BuildRequestFrame(0x11, 0x03, 0xFFFF, 0x0001), 0 };      // Invalid read
-        case 4:  return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0001), 5 };      // Smallest read
-        case 5:  return { BuildRequestFrame(0x11, 0x03, 0x0002, 0x0003), 2 };      // Mid-range read
-        case 6:  return { BuildRequestFrame(0x11, 0x03, 0x0007, 0x0002), 7 };      // Read near writable zone
+        case 0:  return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005), 5 };      // read
+        case 1:  return { BuildRequestFrame(0x11, 0x03, 0x0000, 0x0002), 0 };      // read
+        case 2:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x000A), 8 };      // read
+        case 3:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0010), 8 };      // write
+        case 4:  return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0001), 5 };      // read
+        case 5:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 8 }; // read 
 
-        case 7:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0032), 8 };      // Valid write (50%)
-        case 8:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      // Normal read
-        case 9:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x00C8), 8 };      // Valid write (200%)
-        case 10:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      // Normal read
+        case 6:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0002), 7 };      // read
+
+        case 7:  return { BuildRequestFrame(0x11, 0x06, 0x0008, 0x0032), 8 };      // write (50%)
+        case 8:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      // read
+        case 9:  return { BuildRequestFrame(0x11, 0x06, 0x0007, 0x00C8), 8 };      // write
+        case 10:  return { BuildRequestFrame(0x11, 0x03, 0x0008, 0x0001), 5 };      //read
         default: return { BuildRequestFrame(0x11, 0x03, 0x0005, 0x0005), 5 };      // fallback
     }
 }
 
 
-// Function to print the data buffer
 void printDataBuffer() {
     cout << "\n==== Logged Data Buffer ====\n";
 
@@ -395,6 +413,7 @@ void printDataBuffer() {
     }
 
     time_t lastTime = 0;
+
     for (const auto& s : dataBuffer) {
         time_t t = chrono::system_clock::to_time_t(s.timestamp);
 
@@ -402,7 +421,10 @@ void printDataBuffer() {
         if (t != lastTime) {
             tm local_tm{};
             localtime_s(&local_tm, &t);
-            cout << "\nUpdated Registers @ " << put_time(&local_tm, "%H:%M:%S") << "\n";
+
+            cout << "\nUpdated Registers @ "
+                 << put_time(&local_tm, "%H:%M:%S") << "\n";
+
             lastTime = t;
         }
 
@@ -424,6 +446,7 @@ void printDataBuffer() {
 
 
 
+
 int main() {
     string apiKey = "NjhhZWIwNDU1ZDdmMzg3MzNiMTQ5Yjg2OjY4YWViMDQ1NWQ3ZjM4NzMzYjE0OWI3Yw";
     string response, jsonFrame;
@@ -436,7 +459,7 @@ int main() {
 
     while (true) {
         TestCase tc = getTestCase(caseIndex);
-        logInfo("Running test case " + to_string(caseIndex+1));
+        logInfo("Running test case ");
 
         jsonFrame = frameToJson(tc.frame);
 
@@ -448,10 +471,12 @@ int main() {
         responseFrame = jsontoFrame(response);
         decodeResponseFrame(responseFrame, tc.startAddr); 
 
+        
+
         caseIndex = (caseIndex + 1) % totalCases;
 
         auto now = chrono::steady_clock::now();
-        if (chrono::duration_cast<chrono::seconds>(now - windowStart).count() >= 30) {
+        if (chrono::duration_cast<chrono::seconds>(now - windowStart).count() >= 20) {
             logInfo("30-second window complete. Dumping buffer...");
             printDataBuffer();   // print all samples collected
             dataBuffer.clear();  // flush
