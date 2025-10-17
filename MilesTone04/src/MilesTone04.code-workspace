@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"name": "MilesTone04",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"iomanip": "cpp",
+			"vector": "cpp",
+			"ostream": "cpp",
+			"iostream": "cpp",
+			"cstdint": "cpp",
+			"chrono": "cpp",
+			"text_encoding": "cpp",
+			"typeindex": "cpp",
+			"typeinfo": "cpp",
+			"array": "cpp",
+			"deque": "cpp",
+			"list": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp",
+			"ranges": "cpp",
+			"span": "cpp",
+			"forward_list": "cpp",
+			"unordered_set": "cpp",
+			"flat_map": "cpp",
+			"flat_set": "cpp",
+			"format": "cpp",
+			"generator": "cpp",
+			"stacktrace": "cpp",
+			"regex": "cpp",
+			"valarray": "cpp"
+		}
+	}
+}

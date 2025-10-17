@@ -12,6 +12,7 @@ void ConfigManager::load() {
     cur = {1, 5000, {"voltage", "current", "frequency"}};
     return;
   }
+  
   DynamicJsonDocument d(512);
   deserializeJson(d, f);
   cur.configId = d["configId"] | 1;

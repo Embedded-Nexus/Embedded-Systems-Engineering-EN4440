@@ -36,6 +36,5 @@ void setup() {
 void loop() {
   Acquisition::tick(gBuf, INVERTER_API_KEY, ConfigManager::instance().current().acqPeriodMs);
   gUp.periodicUpload(gBuf);
-  gUp.checkRemoteConfig();   // <-- check every loop for new configs
   delay(10);
 }

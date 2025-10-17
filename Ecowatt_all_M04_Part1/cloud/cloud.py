@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template_string
 import base64
+import threading
 
 app = Flask(__name__)
 store = {}
@@ -239,5 +240,52 @@ def config_ack():
     print(f"[CONFIG-ACK] from {dev}: {ack}")
     return jsonify({"status": "ok", "ack_received": True})
 
+@app.route("/api/inverter/commands")
+def serve_commands():
+    """Device → Cloud: ESP polls for commands."""
+    global should_send_commands, manual_command_list
+
+    dev = request.args.get("deviceId", "unknown")
+
+    if not should_send_commands or not manual_command_list:
+        print(f"[SERVER] {dev} checked — no commands pending.")
+        return jsonify("No")
+
+    should_send_commands = False  # reset after one use
+    print(f"[SERVER] Sending {len(manual_command_list)} command(s) to {dev}.")
+    return jsonify(manual_command_list)
+
+
+def console_listener():
+    """Listens for 'queue' to trigger inverter write commands."""
+    global should_send_commands, manual_command_list
+    print("Type 'queue' to send inverter command(s) on next ESP request.")
+    print("Type anything else to clear the queue.")
+    while True:
+        cmd = input(">> ").strip().lower()
+        if cmd == "queue":
+            should_send_commands = True
+            manual_command_list = [
+                {
+                    "function": "write",
+                    "slave": 17,
+                    "address": 8,
+                    "value": 100,
+                    "attributes": {
+                        "name": "Export power percentage",
+                        "unit": "%",
+                        "description": "Set export power limit to 100%"
+                    }
+                }
+            ]
+            print("✅ Command queued — next ESP poll will receive it.")
+        else:
+            should_send_commands = False
+            manual_command_list = None
+            print("Queue cleared — ESP will receive 'No'.")
+
+
 if __name__ == "__main__":
+    threading.Thread(target=console_listener, daemon=True).start()
+
     app.run(host="0.0.0.0", port=5000, debug=True)

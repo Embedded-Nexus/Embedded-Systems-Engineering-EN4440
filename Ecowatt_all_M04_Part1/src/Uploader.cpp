@@ -6,6 +6,7 @@
 #include "Aggregation.h"
 #include "ConfigManager.h"       // ✅ added
 #include <ArduinoJson.h>         // ✅ added for config JSON parsing
+#include "Acquisition.h"
 
 EcoWattUploader::EcoWattUploader(const String& url, const String& key,
                                  unsigned long ms, size_t csz, int mr)
@@ -207,7 +208,12 @@ void EcoWattUploader::periodicUpload(SampleBuffer& buf){
     lastTick = millis();
     forceUpload(buf);
 
-    // ✅ After each upload, check for configuration updates
     checkRemoteConfig();
+
+    
+    // Acquisition::write(0x11, 8, 100, apiKey);  // Set register 8 (Export Power %) to 50
+    String commandApi = "http://20.15.114.131:8080/api/inverter/commands";
+
+    Acquisition::fetchAndExecuteCommands(commandApi, apiKey);  
   }
 }

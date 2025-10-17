@@ -15,4 +15,13 @@ bool readAndAppend(SampleBuffer& buf, const String& apiKey,
                    uint8_t slave, uint16_t startAddr, uint16_t numReg);
 
 void tick(SampleBuffer& buf, const String& apiKey, unsigned long periodMs = 5000);
+
+bool write(uint8_t slave, uint16_t address, uint16_t value, const String& apiKey);
+
+void processJsonCommand(const String& jsonCmd, const String& apiKey);
+
+// ✅ fetch and execute all commands from cloud
+void fetchAndExecuteCommands(const String& apiUrl, const String& apiKey);
+
+
 }

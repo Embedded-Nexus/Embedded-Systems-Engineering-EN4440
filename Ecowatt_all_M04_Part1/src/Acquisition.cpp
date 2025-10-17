@@ -2,6 +2,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
+#include "Acquisition.h"
 
 namespace {
 // CRC16 for Modbus RTU
@@ -37,6 +38,89 @@ String postJson(const String& url, const String& json, const String& apiKey) {
 } // namespace
 
 namespace Acquisition {
+  void processJsonCommand(const String& jsonCmd, const String& apiKey) {
+    StaticJsonDocument<256> doc;
+    DeserializationError err = deserializeJson(doc, jsonCmd);
+  
+    if (err) {
+      Serial.println("[CMD] Invalid JSON command");
+      return;
+    }
+  
+    String func = doc["function"];
+    if (func != "write") {
+      Serial.println("[CMD] Unsupported function: " + func);
+      return;
+    }
+  
+    uint8_t slave = doc["slave"];
+    uint16_t addr = doc["address"];
+    uint16_t val  = doc["value"];
+  
+    
+    bool ok = Acquisition::write(slave, addr, val, apiKey);
+  
+    if (ok) Serial.println("[CMD] Write command executed successfully");
+    else    Serial.println("[CMD] Write command failed");
+  }
+
+  void fetchAndExecuteCommands(const String& apiUrl, const String& apiKey) {
+    WiFiClient client;
+    HTTPClient http;
+  
+    Serial.println("[CMD] Fetching command list from server...");
+  
+    http.begin(client, apiUrl);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("Authorization", apiKey);
+  
+    int code = http.GET();
+  
+    if (code <= 0) {
+      Serial.printf("[CMD] HTTP error: %d\n", code);
+      http.end();
+      return;
+    }
+  
+    String resp = http.getString();
+    http.end();
+  
+    // If response is literally "No", skip
+    if (resp == "No" || resp == "\"No\"" || resp.length() < 5) {
+      Serial.println("[CMD] No new commands.");
+      return;
+    } else {
+      Serial.println(resp);
+      Serial.println("**********");
+    }
+  
+    // Try to parse JSON array
+    StaticJsonDocument<1024> doc;
+    DeserializationError err = deserializeJson(doc, resp);
+    if (err) {
+      Serial.println("[CMD] JSON parse failed");
+      return;
+    }
+  
+    if (!doc.is<JsonArray>()) {
+      Serial.println("[CMD] Response is not a JSON array");
+      return;
+    }
+  
+    // Iterate through each command in array
+    JsonArray arr = doc.as<JsonArray>();
+    for (JsonObject cmd : arr) {
+      String cmdString;
+      serializeJson(cmd, cmdString);
+      Serial.println("[CMD] Executing command: " + cmdString);
+      processJsonCommand(cmdString, apiKey);
+    }
+  
+    Serial.printf("[CMD] %d commands processed.\n", arr.size());
+  }
+  
+ // namespace Acquisition
+  
 
 // Register metadata (gain + writable flag)
 const RegInfo REGMAP[] = {
@@ -156,5 +240,42 @@ void tick(SampleBuffer& buf, const String& apiKey, unsigned long periodMs) {
 
   readAndAppend(buf, apiKey, 0x11, 0, 10);
 }
+
+bool write(uint8_t slave, uint16_t address, uint16_t value, const String& apiKey) {
+  // Build Modbus Write Single Register frame (function 0x06)
+  std::vector<uint8_t> f(8);
+  f[0] = slave;
+  f[1] = 0x06; // Write single register
+  f[2] = address >> 8;
+  f[3] = address & 0xFF;
+  f[4] = value >> 8;
+  f[5] = value & 0xFF;
+
+  uint16_t crc = crc16_modbus(f.data(), 6);
+  f[6] = crc & 0xFF;
+  f[7] = crc >> 8;
+
+  // Convert frame → JSON
+  String payload = frameToJson(f);
+
+  // Send via HTTP
+  String resp = postJson("http://20.15.114.131:8080/api/inverter/write", payload, apiKey);
+
+  // Decode response JSON → frame
+  auto reply = jsonToFrame(resp);
+
+  if (!validateResponse(reply)) {
+    Serial.println("[WRITE] Invalid response or CRC failed");
+    return false;
+  }
+
+  // Confirm written address & value
+  uint16_t addr = ((uint16_t)reply[2] << 8) | reply[3];
+  uint16_t val  = ((uint16_t)reply[4] << 8) | reply[5];
+
+  Serial.printf("[WRITE] Register %u successfully set to %u\n", addr, val);
+  return true;
+}
+
 
 }
