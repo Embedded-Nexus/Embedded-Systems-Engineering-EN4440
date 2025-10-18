@@ -2,7 +2,7 @@
 
 namespace Compression {
 
-    // 🧱 Run-Length Encoding (RLE) Compression
+    // 🧱 Smart Run-Length Encoding (RLE) Compression
     String compressString(const String& input) {
         if (input.isEmpty()) return "";
 
@@ -10,12 +10,15 @@ namespace Compression {
         int count = 1;
 
         for (int i = 1; i <= input.length(); ++i) {
-            if (i < input.length() && input[i] == input[i - 1]) {
+            bool sameChar = (i < input.length() && input[i] == input[i - 1]);
+            bool isSafeChar = !isDigit(input[i - 1]) && input[i - 1] != '.' && input[i - 1] != ',';
+
+            if (sameChar && isSafeChar) {
                 count++;
             } else {
                 output += input[i - 1];
-                if (count > 1) {
-                    output += "#";       // <-- separator before count
+                if (count > 1 && isSafeChar) {
+                    output += '#';
                     output += String(count);
                 }
                 count = 1;
@@ -25,14 +28,14 @@ namespace Compression {
         return output;
     }
 
-    // 🔁 Run-Length Encoding (RLE) Decompression
+    // 🔁 Smart RLE Decompression
     String decompressString(const String& input) {
         String output;
 
         for (int i = 0; i < input.length(); ++i) {
             char c = input[i];
 
-            // detect '#count' after character
+            // If next char is '#', decode count
             if (i + 1 < input.length() && input[i + 1] == '#') {
                 i += 2; // skip '#'
                 String numStr;
@@ -40,7 +43,7 @@ namespace Compression {
                     numStr += input[i];
                     i++;
                 }
-                i--; // rewind one since loop will increment
+                i--; // step back for outer loop
                 int count = numStr.toInt();
                 for (int j = 0; j < count; j++) output += c;
             } else {
