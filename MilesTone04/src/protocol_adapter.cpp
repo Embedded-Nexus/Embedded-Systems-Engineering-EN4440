@@ -28,7 +28,7 @@ namespace ProtocolAdapter {
             frame.resize(8);
             frame[0] = slaveAddr;
             frame[1] = funcCode;
-            frame[2] = (startAddr >> 8) & 0xFF;
+            frame[2] = (startAddr >> 8) & 0xFF; 
             frame[3] = startAddr & 0xFF;
             frame[4] = (numReg >> 8) & 0xFF;
             frame[5] = numReg & 0xFF;
@@ -73,13 +73,17 @@ namespace ProtocolAdapter {
         }
 
         // Handle READ requests
-        for (int i = 0; i < NUM_REGISTERS; i++) {
-            if (input.read[i]) {
-                vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, i, 1);
-                frameQueue.push_back(frame);
-                Serial.printf("[READ]  Queued R%d\n", i);
-            }
-        }
+        // for (int i = 0; i < NUM_REGISTERS; i++) {
+        //     if (input.read[i]) {
+        //         vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, i, 1);
+        //         frameQueue.push_back(frame);
+        //         Serial.printf("[READ]  Queued R%d\n", i);
+        //     }
+        // }
+
+        // Handle READ requests
+        vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, 0, 10);
+        frameQueue.push_back(frame);
 
         Serial.printf("[ProtocolAdapter] Total frames queued: %d\n", (int)frameQueue.size());
         return frameQueue;

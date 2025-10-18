@@ -10,87 +10,39 @@
 
 
 namespace InverterSim {
-        ////////////////////////// CRC Validation //////////////////////////
-        bool validateCRC(const vector<uint8_t>& frame) {
-            if (frame.size() < 4) return false;  // too short to contain CRC
-    
-            uint16_t receivedCRC = (frame[frame.size() - 1] << 8) | frame[frame.size() - 2];
-            uint16_t calcCRC = Modbus::modbusCRC((uint8_t*)frame.data(), frame.size() - 2);
-    
-            if (receivedCRC == calcCRC) {
-                DEBUG_PRINTLN("[InverterSim] CRC check passed.");
-                return true;
-            } else {
-                DEBUG_PRINTF("[InverterSim] CRC check failed. Received: %04X, Expected: %04X\n", receivedCRC, calcCRC);
-                return false;
-            }
-        }
 
-    ////////////////////////// Validate Response //////////////////////////
-    bool ValidateResponseFrame(const vector<uint8_t>& responseFrame) {
-        if (responseFrame.empty()) {
-            DEBUG_PRINTLN("[InverterSim] Empty or invalid response frame.");
-            return false;
-        }
+    //////////////////// Retry logic for queued frames ////////////////////
+    void processFrameQueue(const vector<vector<uint8_t>>& frames) {
+        DEBUG_PRINTF("[InverterSim] Processing %d frame(s)...\n", (int)frames.size());
 
-        if (!validateCRC(responseFrame)) {
-            DEBUG_PRINTLN("[InverterSim] CRC validation failed.");
-            return false;
-        }
+        int frameIndex = 0;
+        for (const auto& frame : frames) {
+            frameIndex++;
+            DEBUG_PRINTF("[InverterSim] Sending frame #%d...\n", frameIndex);
 
-        uint8_t funcCode = responseFrame[1];
-        if (funcCode & 0x80) {
-            uint8_t exceptionCode = responseFrame[2];
-            DEBUG_PRINTF("[InverterSim] Modbus Exception: 0x%02X\n", exceptionCode);
-            return false;
-        }
+            int attempt = 0;
+            bool success = false;
 
-        DEBUG_PRINTLN("[InverterSim] Valid Modbus response frame.");
-        return true;
-    }
-
-    ////////////////////////// Decode Response //////////////////////////
-    void decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr) {
-        if (frame.size() < 5) return;
-        uint8_t funcCode = frame[1];
-    
-        if (funcCode == 0x03) { // READ
-            uint8_t byteCount = frame[2];
-            uint8_t numRegisters = byteCount / 2;
-            DEBUG_PRINTF("[InverterSim] Decoding %d registers (starting at R%d):\n", numRegisters, startAddr);
-    
-            for (uint8_t i = 0; i < numRegisters; i++) {
-                uint16_t regAddr = startAddr + i;
-                uint16_t rawValue = (frame[3 + i * 2] << 8) | frame[4 + i * 2];
-    
-                if (regAddr < REGISTER_COUNT) {
-                    const auto& reg = registerMap[regAddr];
-                    float scaled = (float)rawValue / reg.scale;
-                    DEBUG_PRINTF("  R%-2d %-35s = %.2f %s (raw=%d)\n",
-                                 reg.index, reg.name, scaled, reg.unit, rawValue);
-                } else {
-                    DEBUG_PRINTF("  R%-2d (Unknown) = %d\n", regAddr, rawValue);
+            while (attempt < 3 && !success) {
+                DEBUG_PRINTF("Attempt %d for frame #%d...\n", attempt + 1, frameIndex);
+                success = sendFrameToInverter(frame);
+                attempt++;
+                if (!success) {
+                    DEBUG_PRINTLN("[InverterSim] Retry in 400ms...");
+                    delay(400);
                 }
             }
-        }
-        else if (funcCode == 0x06) { // WRITE
-            uint16_t addr = (frame[2] << 8) | frame[3];
-            uint16_t value = (frame[4] << 8) | frame[5];
-    
-            if (addr < REGISTER_COUNT) {
-                const auto& reg = registerMap[addr];
-                DEBUG_PRINTF("[InverterSim] Write Confirmed: %s (R%d) = %d %s\n",
-                             reg.name, addr, value, reg.unit);
+
+            if (!success) {
+                DEBUG_PRINTF("[InverterSim] Frame #%d FAILED after 3 attempts.\n", frameIndex);
+                // TODO: log or queue for retry later
             } else {
-                DEBUG_PRINTF("[InverterSim] Write Confirmed: Unknown R%d = %d\n", addr, value);
+                DEBUG_PRINTF("[InverterSim] Frame #%d SUCCESS.\n", frameIndex);
             }
         }
-        else {
-            DEBUG_PRINTF("[InverterSim] Unsupported function code: 0x%02X\n", funcCode);
-        }
-    }
-    
-    
+
+        DEBUG_PRINTLN("[InverterSim] Frame queue processing complete.");
+    }   
 
     //////////////////// Main inverter send function ////////////////////
     bool sendFrameToInverter(const vector<uint8_t>& frame) {
@@ -125,39 +77,44 @@ namespace InverterSim {
     
         return success;
     }
-    
 
-    //////////////////// Retry logic for queued frames ////////////////////
-    void processFrameQueue(const vector<vector<uint8_t>>& frames) {
-        DEBUG_PRINTF("[InverterSim] Processing %d frame(s)...\n", (int)frames.size());
+    ////////////////////////// CRC Validation //////////////////////////
+    bool validateCRC(const vector<uint8_t>& frame) {
+        if (frame.size() < 4) return false;  // too short to contain CRC
 
-        int frameIndex = 0;
-        for (const auto& frame : frames) {
-            frameIndex++;
-            DEBUG_PRINTF("[InverterSim] Sending frame #%d...\n", frameIndex);
+        uint16_t receivedCRC = (frame[frame.size() - 1] << 8) | frame[frame.size() - 2];
+        uint16_t calcCRC = Modbus::modbusCRC((uint8_t*)frame.data(), frame.size() - 2);
 
-            int attempt = 0;
-            bool success = false;
+        if (receivedCRC == calcCRC) {
+            DEBUG_PRINTLN("[InverterSim] CRC check passed.");
+            return true;
+        } else {
+            DEBUG_PRINTF("[InverterSim] CRC check failed. Received: %04X, Expected: %04X\n", receivedCRC, calcCRC);
+            return false;
+        }
+    }
 
-            while (attempt < 3 && !success) {
-                DEBUG_PRINTF("Attempt %d for frame #%d...\n", attempt + 1, frameIndex);
-                success = sendFrameToInverter(frame);
-                attempt++;
-                if (!success) {
-                    DEBUG_PRINTLN("[InverterSim] Retry in 400ms...");
-                    delay(400);
-                }
-            }
-
-            if (!success) {
-                DEBUG_PRINTF("[InverterSim] Frame #%d FAILED after 3 attempts.\n", frameIndex);
-                // TODO: log or queue for retry later
-            } else {
-                DEBUG_PRINTF("[InverterSim] Frame #%d SUCCESS.\n", frameIndex);
-            }
+    ////////////////////////// Validate Response //////////////////////////
+    bool ValidateResponseFrame(const vector<uint8_t>& responseFrame) {
+        if (responseFrame.empty()) {
+            DEBUG_PRINTLN("[InverterSim] Empty or invalid response frame.");
+            return false;
         }
 
-        DEBUG_PRINTLN("[InverterSim] Frame queue processing complete.");
+        if (!validateCRC(responseFrame)) {
+            DEBUG_PRINTLN("[InverterSim] CRC validation failed.");
+            return false;
+        }
+
+        uint8_t funcCode = responseFrame[1];
+        if (funcCode & 0x80) {
+            uint8_t exceptionCode = responseFrame[2];
+            DEBUG_PRINTF("[InverterSim] Modbus Exception: 0x%02X\n", exceptionCode);
+            return false;
+        }
+
+        DEBUG_PRINTLN("[InverterSim] Valid Modbus response frame.");
+        return true;
     }
 
     //////////////////// Process Response Frames ////////////////////
@@ -178,8 +135,66 @@ namespace InverterSim {
         }
     
         // Step 3: Decode and display registers — ✅ now with startAddr
-        decodeResponseFrame(frame, startAddr);
+        auto decoded = decodeResponseFrame(frame, startAddr);
+
+        // 🧩 Store decoded data in TemporaryBuffer
+        TemporaryBuffer::update(decoded);
+
     
         DEBUG_PRINTLN("[InverterSim] === Response Frame Processing Complete ===");
+    }
+
+    ////////////////////////// Decode Response //////////////////////////
+    vector<DecodedRegisters> decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr) {
+        vector<DecodedRegisters> decoded;  // collected results
+        if (frame.size() < 5) return decoded;
+
+        uint8_t funcCode = frame[1];
+
+        if (funcCode == 0x03) { // READ
+            uint8_t byteCount = frame[2];
+            uint8_t numRegisters = byteCount / 2;
+            DEBUG_PRINTF("[InverterSim] Decoding %d registers (starting at R%d):\n", numRegisters, startAddr);
+
+            for (uint8_t i = 0; i < numRegisters; i++) {
+                uint16_t regAddr = startAddr + i;
+                uint16_t rawValue = (frame[3 + i * 2] << 8) | frame[4 + i * 2];
+
+                if (regAddr < REGISTER_COUNT) {
+                    const auto& reg = registerMap[regAddr];
+                    float scaled = (float)rawValue / reg.scale;
+
+                    DEBUG_PRINTF("  R%-2d %-35s = %.2f %s (raw=%d)\n",
+                                 reg.index, reg.name, scaled, reg.unit, rawValue);
+
+                    decoded.push_back({reg.index, reg.name, scaled, rawValue, reg.unit});
+                } 
+                else {
+                    DEBUG_PRINTF("  R%-2d (Unknown) = %d\n", regAddr, rawValue);
+                    decoded.push_back({(uint8_t)regAddr, "Unknown", (float)rawValue, rawValue, ""});
+                }
+            }
+        } 
+        else if (funcCode == 0x06) { // WRITE
+            uint16_t addr = (frame[2] << 8) | frame[3];
+            uint16_t value = (frame[4] << 8) | frame[5];
+
+            if (addr < REGISTER_COUNT) {
+                const auto& reg = registerMap[addr];
+                DEBUG_PRINTF("[InverterSim] Write Confirmed: %s (R%d) = %d %s\n",
+                             reg.name, addr, value, reg.unit);
+
+                decoded.push_back({reg.index, reg.name, (float)value, value, reg.unit});
+            } 
+            else {
+                DEBUG_PRINTF("[InverterSim] Write Confirmed: Unknown R%d = %d\n", addr, value);
+                decoded.push_back({(uint8_t)addr, "Unknown", (float)value, value, ""});
+            }
+        } 
+        else {
+            DEBUG_PRINTF("[InverterSim] Unsupported function code: 0x%02X\n", funcCode);
+        }
+
+        return decoded;
     }
 }  // namespace InverterSim

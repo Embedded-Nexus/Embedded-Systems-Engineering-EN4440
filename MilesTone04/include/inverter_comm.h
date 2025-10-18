@@ -3,6 +3,9 @@
 
 #include <Arduino.h>
 #include <vector>
+#include "decoded_registers.h"
+#include "temporary_buffer.h"
+
 using namespace std;
 
 namespace InverterSim {
@@ -24,7 +27,7 @@ namespace InverterSim {
 
     bool validateCRC(const vector<uint8_t>& frame);
 
-    void decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr);
+    vector<DecodedRegisters> decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr);
 
 
 }

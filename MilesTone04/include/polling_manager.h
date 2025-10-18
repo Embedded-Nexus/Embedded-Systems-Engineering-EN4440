@@ -6,6 +6,9 @@
 #include "inverter_comm.h"
 #include "request_config.h"
 #include "debug_utils.h"
+#include "decoded_registers.h"
+#include "temporary_buffer.h"
+#include "buffer.h"
 
 namespace PollingManager {
 

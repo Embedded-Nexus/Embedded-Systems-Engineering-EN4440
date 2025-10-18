@@ -3,19 +3,16 @@
 
 #include "protocol_adapter.h"
 
-// 🧱 Predefined inverter request configuration
-inline RequestSIM buildRequestConfig() {
-    RequestSIM req = {};
+// 🧩 Configuration namespace for all inverter request presets
+namespace RequestConfig {
 
-    // WRITE request
-    req.write[8] = true;          // Export power percentage
-    req.writeData[8] = 25;        // Set to 25%
+    // Build a default Modbus request configuration
+    RequestSIM buildRequestConfig();
 
-    // READ requests
-    req.read[2] = true;           // L1 Phase Frequency
-    req.read[8] = true;           // Export power %
+    // (Optional) you can add more later, e.g.:
+    // RequestSIM buildStartup();
+    // RequestSIM buildDiagnostics();
 
-    return req;
 }
 
 #endif  // REQUEST_CONFIG_H

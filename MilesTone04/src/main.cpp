@@ -1,30 +1,54 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <time.h>                      // 🕒 For NTP
 #include "protocol_adapter.h"
 #include "inverter_comm.h"
 #include "debug_utils.h"
 #include "request_config.h"
-#include "polling_manager.h"   // 🆕 new header
+#include "polling_manager.h"
 
-const char* ssid = "Ruchira";
+const char* ssid     = "Ruchira";
 const char* password = "1234567890";
 
-void connectToWiFi() {
+// 🌐 Wi-Fi + NTP Setup
+void connectToWiFiAndSyncTime() {
     DEBUG_PRINTF("Connecting to Wi-Fi: %s\n", ssid);
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
 
     int attempts = 0;
-    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    while (WiFi.status() != WL_CONNECTED && attempts < 30) {
         delay(500);
         DEBUG_PRINT(".");
         attempts++;
     }
 
     if (WiFi.status() == WL_CONNECTED) {
-        DEBUG_PRINTLN("\nWi-Fi connected!");
+        DEBUG_PRINTLN("\n✅ Wi-Fi connected!");
         DEBUG_PRINTF("IP address: %s\n", WiFi.localIP().toString().c_str());
+
+        // 🌍 Configure NTP — change 5.5 * 3600 to your UTC offset if needed
+        configTime(5.5 * 3600, 0, "pool.ntp.org", "time.nist.gov");
+
+        DEBUG_PRINTLN("⏳ Syncing time with NTP servers...");
+        time_t now = time(nullptr);
+        int retries = 0;
+        while (now < 1000000000 && retries < 20) {  // wait until valid epoch time
+            delay(500);
+            DEBUG_PRINT(".");
+            now = time(nullptr);
+            retries++;
+        }
+
+        struct tm timeinfo;
+        localtime_r(&now, &timeinfo);
+        DEBUG_PRINTF(
+            "\n🕒 Time synchronized: %04d-%02d-%02d %02d:%02d:%02d\n",
+            timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+            timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec
+        );
     } else {
-        DEBUG_PRINTLN("\n[Error] Wi-Fi connection failed!");
+        DEBUG_PRINTLN("\n❌ [Error] Wi-Fi connection failed!");
     }
 }
 
@@ -33,13 +57,17 @@ void setup() {
     delay(200);
 
     DEBUG_PRINTLN("=== Debug Mode Active ===");
-    connectToWiFi();
 
-    // 🕒 Initialize polling (every 5 seconds)
-    PollingManager::begin(20000);
+    // 🌐 Connect to Wi-Fi and get real-world time
+    connectToWiFiAndSyncTime();
+
+    // 🕒 Initialize polling (every 10 seconds)
+    PollingManager::begin(10000);
+
+    DEBUG_PRINTLN("[System] ✅ Setup complete.");
 }
 
 void loop() {
-    // 🧭 Handle periodic polling
+    // 🧭 Handle periodic polling cycle
     PollingManager::handle();
 }
