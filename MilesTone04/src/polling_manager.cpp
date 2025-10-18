@@ -51,26 +51,44 @@ namespace PollingManager {
             }
             DEBUG_PRINTLN("==================================================");
 
-            // Step 6️⃣: Create a payload from the main buffer for compression
-            String payload;
-            for (const auto& entry : history) {
-                payload += entry.timestamp + "," +
-                           entry.reg.name + "," +
-                           String(entry.reg.scaledValue) + "\n";
+        // Step 6️⃣: Delta16 Compression & Flush
+        const auto& currentBuffer = Buffer::getAll();
+
+        if (!currentBuffer.empty()) {
+            std::vector<uint16_t> rawValues;
+            rawValues.reserve(currentBuffer.size());
+
+            for (const auto& entry : currentBuffer) {
+                rawValues.push_back((uint16_t)entry.reg.rawValue);
             }
 
-            DEBUG_PRINTF("\n[Compression] Original Payload Size: %u bytes\n", payload.length());
+            // Original size
+            size_t originalSize = rawValues.size() * sizeof(uint16_t);
 
-            // Step 7️⃣: Compress the payload
-            String compressed = Compression::compressString(payload);
-            DEBUG_PRINTF("[Compression] Compressed Size: %u bytes\n", compressed.length());
+            // Compress
+            String compressed = Compression::compressDelta16(rawValues);
+            size_t compressedSize = compressed.length();
 
-            // Optional: Verify decompression
-            String decompressed = Compression::decompressString(compressed);
-            bool lossless = (payload == decompressed);
-            DEBUG_PRINTF("[Compression] Lossless Verify: %s\n", lossless ? "✅ YES" : "❌ NO");
+            float ratio = (originalSize > 0)
+                            ? (100.0f * (originalSize - compressedSize) / originalSize)
+                            : 0.0f;
 
-            DEBUG_PRINTLN("================ POLLING CYCLE END ==================\n");
+            DEBUG_PRINTF("[PollingManager] 🗜️ Delta16 Compression:\n");
+            DEBUG_PRINTF("  Original size   : %u bytes\n", originalSize);
+            DEBUG_PRINTF("  Compressed size : %u bytes\n", compressedSize);
+            DEBUG_PRINTF("  Reduction       : %.2f%%\n", ratio);
+
+            if (compressedSize < originalSize)
+                DEBUG_PRINTLN("  ✅ Compression effective.");
+            else
+                DEBUG_PRINTLN("  ⚠️ No compression benefit.");
+
+            Buffer::clear();
+            DEBUG_PRINTLN("[PollingManager] 🧹 Buffer flushed after compression.\n");
+        }
+
+
+
         }
     }
 

@@ -2,56 +2,47 @@
 
 namespace Compression {
 
-    // 🧱 Smart Run-Length Encoding (RLE) Compression
-    String compressString(const String& input) {
-        if (input.isEmpty()) return "";
+    String compressDelta16(const std::vector<uint16_t>& values) {
+        if (values.empty()) return "";
 
         String output;
-        int count = 1;
+        uint16_t prev = values[0];
+        output += String(prev) + ",";  // store first value
 
-        for (int i = 1; i <= input.length(); ++i) {
-            bool sameChar = (i < input.length() && input[i] == input[i - 1]);
-            bool isSafeChar = !isDigit(input[i - 1]) && input[i - 1] != '.' && input[i - 1] != ',';
-
-            if (sameChar && isSafeChar) {
-                count++;
-            } else {
-                output += input[i - 1];
-                if (count > 1 && isSafeChar) {
-                    output += '#';
-                    output += String(count);
-                }
-                count = 1;
-            }
+        for (size_t i = 1; i < values.size(); ++i) {
+            int16_t delta = (int16_t)(values[i] - prev);
+            output += String(delta) + ",";
+            prev = values[i];
         }
-
         return output;
     }
 
-    // 🔁 Smart RLE Decompression
-    String decompressString(const String& input) {
-        String output;
+    std::vector<uint16_t> decompressDelta16(const String& data) {
+        std::vector<uint16_t> result;
+        if (data.isEmpty()) return result;
 
-        for (int i = 0; i < input.length(); ++i) {
-            char c = input[i];
+        int start = 0;
+        int comma = data.indexOf(',');
 
-            // If next char is '#', decode count
-            if (i + 1 < input.length() && input[i + 1] == '#') {
-                i += 2; // skip '#'
-                String numStr;
-                while (i < input.length() && isDigit(input[i])) {
-                    numStr += input[i];
-                    i++;
-                }
-                i--; // step back for outer loop
-                int count = numStr.toInt();
-                for (int j = 0; j < count; j++) output += c;
-            } else {
-                output += c;
-            }
+        // First absolute value
+        if (comma > 0) {
+            uint16_t value = (uint16_t)data.substring(start, comma).toInt();
+            result.push_back(value);
+            start = comma + 1;
         }
 
-        return output;
+        // Remaining deltas
+        while (start < data.length()) {
+            comma = data.indexOf(',', start);
+            if (comma == -1) break;
+
+            int delta = data.substring(start, comma).toInt();
+            uint16_t newVal = result.back() + delta;
+            result.push_back(newVal);
+
+            start = comma + 1;
+        }
+        return result;
     }
 
-} // namespace Compression
+}

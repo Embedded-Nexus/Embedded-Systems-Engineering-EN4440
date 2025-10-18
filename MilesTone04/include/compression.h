@@ -2,15 +2,16 @@
 #define COMPRESSION_H
 
 #include <Arduino.h>
+#include <vector>
 
 namespace Compression {
 
-    // Compress using simple Run-Length Encoding (RLE)
-    String compressString(const String& input);
+    struct Delta16Entry {
+        uint16_t value;
+    };
 
-    // Decompress (reverse of RLE)
-    String decompressString(const String& input);
-
+    String compressDelta16(const std::vector<uint16_t>& values);
+    std::vector<uint16_t> decompressDelta16(const String& data);
 }
 
 #endif
