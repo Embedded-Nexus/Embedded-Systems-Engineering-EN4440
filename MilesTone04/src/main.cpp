@@ -62,7 +62,7 @@ void setup() {
     connectToWiFiAndSyncTime();
 
     // 🕒 Initialize polling (every 10 seconds)
-    PollingManager::begin(10000);
+    PollingManager::begin(2000);
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");
 }
