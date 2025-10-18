@@ -6,7 +6,7 @@
 class EcoWattUploader {
 public:
   EcoWattUploader(const String& baseUrl, const String& apiKey,
-                  unsigned long uploadIntervalMs=5000,
+                  unsigned long uploadIntervalMs=15000,
                   size_t chunkSize=600, int maxRetries=3);
 
   void periodicUpload(SampleBuffer& buf);

@@ -3,6 +3,7 @@
 #include "Acquisition.h"
 #include "Buffer.h"
 #include "Uploader.h"
+#include "ConfigManager.h"
 
 // ---- CONFIG ----
 const char* WIFI_SSID = "Ruchira";
@@ -33,10 +34,7 @@ void setup() {
 }
 
 void loop() {
-  // Milestone 2: poll inverter & append quantized u16 samples
-  Acquisition::tick(gBuf, INVERTER_API_KEY, 5000);
-
-  // Milestone 3: periodic finalize->compress->upload (15s demo)
+  Acquisition::tick(gBuf, INVERTER_API_KEY, ConfigManager::instance().current().acqPeriodMs);
   gUp.periodicUpload(gBuf);
   delay(10);
 }
