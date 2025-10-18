@@ -1,0 +1,21 @@
+2025-10-18 22:10:48,610 [INFO] cloud.server: Initializing database...
+2025-10-18 22:10:48,611 [INFO] cloud.server: Database initialized.
+2025-10-18 22:10:48,611 [INFO] cloud.server: App teardown registered.
+2025-10-18 22:10:48,616 [INFO] cloud.server: Blueprints registered.
+2025-10-18 22:10:48,650 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.10.17.117:5000
+2025-10-18 22:10:48,650 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-10-18 22:10:48,652 [INFO] werkzeug:  * Restarting with stat
+2025-10-18 22:10:48,888 [INFO] cloud.server: Initializing database...
+2025-10-18 22:10:48,889 [INFO] cloud.server: Database initialized.
+2025-10-18 22:10:48,889 [INFO] cloud.server: App teardown registered.
+2025-10-18 22:10:48,893 [INFO] cloud.server: Blueprints registered.
+2025-10-18 22:10:48,910 [WARNING] werkzeug:  * Debugger is active!
+2025-10-18 22:10:48,913 [INFO] werkzeug:  * Debugger PIN: 558-356-136
+2025-10-18 22:11:04,796 [INFO] werkzeug: 127.0.0.1 - - [18/Oct/2025 22:11:04] "OPTIONS /commands HTTP/1.1" 200 -
+2025-10-18 22:11:04,805 [INFO] werkzeug: 127.0.0.1 - - [18/Oct/2025 22:11:04] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-10-18 22:11:04,813 [INFO] werkzeug: 127.0.0.1 - - [18/Oct/2025 22:11:04] "GET /commands HTTP/1.1" 200 -
+2025-10-18 22:11:25,228 [INFO] werkzeug: 127.0.0.1 - - [18/Oct/2025 22:11:25] "POST /commands HTTP/1.1" 200 -
+2025-10-18 22:11:30,931 [INFO] werkzeug: 127.0.0.1 - - [18/Oct/2025 22:11:30] "GET /commands HTTP/1.1" 200 -
