@@ -1,13 +1,11 @@
 {
     "files.associations": {
-        "iomanip": "cpp",
-        "vector": "cpp",
-        "ostream": "cpp",
-        "iostream": "cpp",
-        "cstdint": "cpp",
-        "chrono": "cpp",
-        "text_encoding": "cpp",
-        "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "sstream": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "ranges": "cpp",
+        "utility": "cpp",
+        "vector": "cpp"
     }
 }
