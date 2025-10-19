@@ -134,26 +134,51 @@ namespace InverterSim {
             return;
         }
     
-        // Step 3: Decode and display registers — ✅ now with startAddr
-        auto decoded = decodeResponseFrame(frame, startAddr);
+        // Step 3: Decode and display registers —  now with startAddr
+        auto snapshot = decodeResponseFrame(frame, startAddr);
 
-        // 🧩 Store decoded data in TemporaryBuffer
-        TemporaryBuffer::update(decoded);
+        // // 🧩 Store snapshot data in TemporaryBuffer
+        TemporaryBuffer::update(snapshot);
+
+        // 🔍 Print snapshot summary to Serial
+        Serial.printf("[TemporaryBuffer] ✅ Stored snapshot at %s\n", snapshot.timestamp.c_str());
+        for (size_t i = 0; i < snapshot.values.size(); ++i) {
+            if (snapshot.values[i] != -1.0f) {
+                Serial.printf("  R%-3d = %.2f\n", (int)i, snapshot.values[i]);
+            } else {
+                Serial.printf("  R%-3d = (unread)\n", (int)i);
+            }
+        }
 
     
         DEBUG_PRINTLN("[InverterSim] === Response Frame Processing Complete ===");
     }
 
     ////////////////////////// Decode Response //////////////////////////
-    vector<DecodedRegisters> decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr) {
-        vector<DecodedRegisters> decoded;  // collected results
-        if (frame.size() < 5) return decoded;
+    TimedSnapshot decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr) {
+        TimedSnapshot snapshot;
+        snapshot.values.assign(REGISTER_COUNT, -1.0f);  // initialize with -1 for unread registers
+
+        if (frame.size() < 5) {
+            snapshot.timestamp = "INVALID";
+            return snapshot;
+        }
+
+        // --- Generate timestamp ---
+        time_t now = time(nullptr);
+        struct tm* t = localtime(&now);
+        char buf[25];
+        snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
+                t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+                t->tm_hour, t->tm_min, t->tm_sec);
+        snapshot.timestamp = String(buf);
 
         uint8_t funcCode = frame[1];
 
-        if (funcCode == 0x03) { // READ
+        if (funcCode == 0x03) { // READ RESPONSE
             uint8_t byteCount = frame[2];
             uint8_t numRegisters = byteCount / 2;
+
             DEBUG_PRINTF("[InverterSim] Decoding %d registers (starting at R%d):\n", numRegisters, startAddr);
 
             for (uint8_t i = 0; i < numRegisters; i++) {
@@ -164,37 +189,36 @@ namespace InverterSim {
                     const auto& reg = registerMap[regAddr];
                     float scaled = (float)rawValue / reg.scale;
 
-                    DEBUG_PRINTF("  R%-2d %-35s = %.2f %s (raw=%d)\n",
-                                 reg.index, reg.name, scaled, reg.unit, rawValue);
+                    snapshot.values[reg.index] = scaled;
 
-                    decoded.push_back({reg.index, reg.name, scaled, rawValue, reg.unit});
-                } 
-                else {
+                    DEBUG_PRINTF("  R%-2d %-35s = %.2f %s (raw=%d)\n",
+                                reg.index, reg.name, scaled, reg.unit, rawValue);
+                } else {
                     DEBUG_PRINTF("  R%-2d (Unknown) = %d\n", regAddr, rawValue);
-                    decoded.push_back({(uint8_t)regAddr, "Unknown", (float)rawValue, rawValue, ""});
                 }
             }
-        } 
-        else if (funcCode == 0x06) { // WRITE
+        }
+
+        else if (funcCode == 0x06) { // WRITE CONFIRMATION
             uint16_t addr = (frame[2] << 8) | frame[3];
             uint16_t value = (frame[4] << 8) | frame[5];
 
             if (addr < REGISTER_COUNT) {
                 const auto& reg = registerMap[addr];
-                DEBUG_PRINTF("[InverterSim] Write Confirmed: %s (R%d) = %d %s\n",
-                             reg.name, addr, value, reg.unit);
+                snapshot.values[reg.index] = (float)value / reg.scale;
 
-                decoded.push_back({reg.index, reg.name, (float)value, value, reg.unit});
-            } 
-            else {
+                DEBUG_PRINTF("[InverterSim] Write Confirmed: %s (R%d) = %.2f %s\n",
+                            reg.name, addr, (float)value / reg.scale, reg.unit);
+            } else {
                 DEBUG_PRINTF("[InverterSim] Write Confirmed: Unknown R%d = %d\n", addr, value);
-                decoded.push_back({(uint8_t)addr, "Unknown", (float)value, value, ""});
             }
-        } 
+        }
+
         else {
             DEBUG_PRINTF("[InverterSim] Unsupported function code: 0x%02X\n", funcCode);
         }
 
-        return decoded;
+        return snapshot;
     }
+
 }  // namespace InverterSim

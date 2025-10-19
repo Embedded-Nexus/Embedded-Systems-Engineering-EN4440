@@ -10,7 +10,7 @@ namespace {
     unsigned long lastPollTime = 0;
     unsigned long pollInterval = 5000;
     unsigned long lastCompressionTime = 0;
-    const unsigned long compressionInterval = 15000; // compress every 15s
+    const unsigned long compressionInterval = 30000; // compress every 15s
 }
 
 namespace PollingManager {
@@ -40,57 +40,18 @@ namespace PollingManager {
             // Append filtered data to buffer
             Buffer::appendFromTemporary(req);
 
-            // Display the buffer
-            const auto& history = Buffer::getAll();
-            DEBUG_PRINTLN("\n=== MAIN BUFFER (Filtered + Timestamped Data) ===");
-            for (const auto& entry : history) {
-                const auto& r = entry.reg;
-                DEBUG_PRINTF("[%s]  R%-2d %-30s = %.2f %s (raw=%d)\n",
-                             entry.timestamp.c_str(),
-                             r.index, r.name.c_str(),
-                             r.scaledValue, r.unit.c_str(), r.rawValue);
-            }
-            DEBUG_PRINTLN("==================================================");
-        }
+            // 🔍 Print main buffer contents
+            const auto& allSnapshots = Buffer::getAll();
+            Serial.printf("[MainBuffer] 📊 Total snapshots: %d\n", (int)allSnapshots.size());
 
-        // Step 2️⃣: Compress and flush every 15 seconds
-        if (now - lastCompressionTime >= compressionInterval) {
-            lastCompressionTime = now;
+            for (size_t s = 0; s < allSnapshots.size(); ++s) {
+                const auto& snap = allSnapshots[s];
+                Serial.printf("  Snapshot %d @ %s\n", (int)s + 1, snap.timestamp.c_str());
 
-            const auto& currentBuffer = Buffer::getAll();
-
-            if (!currentBuffer.empty()) {
-                std::vector<uint16_t> rawValues;
-                rawValues.reserve(currentBuffer.size());
-
-                for (const auto& entry : currentBuffer) {
-                    rawValues.push_back((uint16_t)entry.reg.rawValue);
+                // Print register values
+                for (size_t i = 0; i < snap.values.size(); ++i) {
+                        Serial.printf("    R%-3d = %.2f\n", (int)i, snap.values[i]);
                 }
-
-                // Perform compression benchmark
-                auto result = Compression::TimeSeriesCompressor::benchmark(rawValues, 4);
-
-                float ratio = (result.origBytes > 0)
-                                ? (100.0f * (result.origBytes - result.compBytes) / result.origBytes)
-                                : 0.0f;
-
-                DEBUG_PRINTLN("\n[PollingManager] 🗜️ Compression Summary:");
-                DEBUG_PRINTF("  Method          : %s\n", result.mode.c_str());
-                DEBUG_PRINTF("  Samples         : %u\n", result.samples);
-                DEBUG_PRINTF("  Original Size   : %u bytes\n", result.origBytes);
-                DEBUG_PRINTF("  Compressed Size : %u bytes\n", result.compBytes);
-                DEBUG_PRINTF("  Reduction       : %.2f%%\n", ratio);
-                DEBUG_PRINTF("  CPU Time        : %lu µs\n", result.tCompressUs);
-                DEBUG_PRINTF("  Lossless Verify : %s\n", result.lossless ? "✅ YES" : "❌ NO");
-
-                if (result.compBytes < result.origBytes)
-                    DEBUG_PRINTLN("  ✅ Compression effective!");
-                else
-                    DEBUG_PRINTLN("  ⚠️ No compression benefit.");
-
-                // Flush the main buffer
-                Buffer::clear();
-                DEBUG_PRINTLN("[Buffer] 🧹 Main buffer cleared after compression.\n");
             }
         }
     }

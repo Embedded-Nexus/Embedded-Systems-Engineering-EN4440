@@ -1,42 +1,57 @@
 #include "buffer.h"
+#include "temporary_buffer.h"
 #include "debug_utils.h"
-#include <time.h>   // for timestamp generation
+#include "inverter_comm.h"
+#include "request_config.h"
+
 
 namespace Buffer {
 
-    vector<TimedRegister> mainBuffer;
+    static std::vector<TimedSnapshot> mainBuffer;
 
-    // Helper: format current local time as "YYYY-MM-DD HH:MM:SS"
-    String getCurrentTimestamp() {
-        time_t now = time(nullptr);
-        struct tm* t = localtime(&now);
-        char buf[25];
-        snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d",
-                 t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-                 t->tm_hour, t->tm_min, t->tm_sec);
-        return String(buf);
-    }
-
+    // --------------------------------------------------------------------
+    // Append filtered snapshot(s) from TemporaryBuffer
+    // --------------------------------------------------------------------
     void appendFromTemporary(const RequestSIM& config) {
-        const auto& allData = TemporaryBuffer::getAll();
-        String currentTime = getCurrentTimestamp();
-
-        for (const auto& reg : allData) {
-            // Include only registers flagged for reading
-            if (reg.index < NUM_REGISTERS && config.read[reg.index]) {
-                mainBuffer.push_back({reg, currentTime});
-            }
+        const auto& tempData = TemporaryBuffer::getAll();
+        if (tempData.empty()) {
+            DEBUG_PRINTLN("[Buffer] ⚠️ Temporary buffer is empty, nothing to append.");
+            return;
         }
 
-        // Debug print
-        DEBUG_PRINTF("[Buffer] ✅ Appended %d new filtered registers at %s\n",
-                     (int)allData.size(), currentTime.c_str());
+        // Process each snapshot stored in TemporaryBuffer
+        for (const auto& snapshot : tempData) {
+            TimedSnapshot filtered;
+            filtered.timestamp = snapshot.timestamp;
+            filtered.values.assign(NUM_REGISTERS, -1.0f);  // initialize all unread
+
+            // Copy only registers flagged for reading
+            for (size_t i = 0; i < snapshot.values.size() && i < NUM_REGISTERS; ++i) {
+                if (config.read[i]) {
+                    filtered.values[i] = snapshot.values[i];
+                }
+            }
+
+            mainBuffer.push_back(filtered);
+
+            DEBUG_PRINTF("[Buffer] ✅ Added filtered snapshot at %s\n",
+                         filtered.timestamp.c_str());
+        }
+
+        DEBUG_PRINTF("[Buffer] 📦 Main buffer now has %d snapshot(s)\n",
+                     (int)mainBuffer.size());
     }
 
-    const vector<TimedRegister>& getAll() {
+    // --------------------------------------------------------------------
+    // Retrieve all stored snapshots
+    // --------------------------------------------------------------------
+    const std::vector<TimedSnapshot>& getAll() {
         return mainBuffer;
     }
 
+    // --------------------------------------------------------------------
+    // Clear main buffer
+    // --------------------------------------------------------------------
     void clear() {
         mainBuffer.clear();
         DEBUG_PRINTLN("[Buffer] 🧹 Main buffer cleared.");

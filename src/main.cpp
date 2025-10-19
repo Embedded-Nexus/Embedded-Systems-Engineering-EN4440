@@ -6,6 +6,7 @@
 #include "debug_utils.h"
 #include "request_config.h"
 #include "polling_manager.h"
+#include "upload_manager.h"
 
 const char* ssid     = "Ruchira";
 const char* password = "1234567890";
@@ -62,7 +63,9 @@ void setup() {
     connectToWiFiAndSyncTime();
 
     // 🕒 Initialize polling (every 10 seconds)
-    PollingManager::begin(2000);
+    PollingManager::begin(5000);
+    UploadManager::begin("http://172.20.10.4:5000/data");
+
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");
 }
@@ -70,4 +73,5 @@ void setup() {
 void loop() {
     // 🧭 Handle periodic polling cycle
     PollingManager::handle();
+    UploadManager::handle();
 }

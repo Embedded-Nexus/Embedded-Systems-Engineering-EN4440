@@ -5,6 +5,8 @@
 #include <vector>
 #include "decoded_registers.h"
 #include "temporary_buffer.h"
+#include "timed_snapshot.h"
+#include "register_map.h"
 
 using namespace std;
 
@@ -27,7 +29,7 @@ namespace InverterSim {
 
     bool validateCRC(const vector<uint8_t>& frame);
 
-    vector<DecodedRegisters> decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr);
+    TimedSnapshot decodeResponseFrame(const vector<uint8_t>& frame, uint16_t startAddr);
 
 
 }

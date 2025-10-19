@@ -3,22 +3,22 @@
 
 #include <Arduino.h>
 #include <vector>
-#include "inverter_comm.h"  // for DecodedRegisters struct
+#include "timed_snapshot.h"   // our new structure
 
 using namespace std;
 
 namespace TemporaryBuffer {
 
-    // Holds the latest decoded register values
-    extern vector<DecodedRegisters> buffer;
+    // Global buffer storage for snapshots
+    extern vector<TimedSnapshot> buffer;
 
-    // Update or insert new register data (replaces existing entries)
-    void update(const vector<DecodedRegisters>& newData);
+    // Add a new snapshot (replace or append)
+    void update(const TimedSnapshot& newSnapshot);
 
-    // Retrieve all current decoded values
-    const vector<DecodedRegisters>& getAll();
+    // Retrieve all stored snapshots
+    const vector<TimedSnapshot>& getAll();
 
-    // Clear buffer contents
+    // Clear buffer
     void clear();
 
 }  // namespace TemporaryBuffer

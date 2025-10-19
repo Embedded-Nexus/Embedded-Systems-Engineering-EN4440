@@ -3,16 +3,9 @@
 
 #include <Arduino.h>
 #include <vector>
+#include "request_sim.h" 
+
 using namespace std;
-
-#define NUM_REGISTERS 15  // R0–R14
-
-// Struct describing what operations to perform
-struct RequestSIM {
-    bool read[NUM_REGISTERS];       // read[i] → true if register Ri should be read
-    bool write[NUM_REGISTERS];      // write[i] → true if register Ri should be written
-    uint16_t writeData[NUM_REGISTERS]; // value to write when write[i] == true
-};
 
 namespace ProtocolAdapter {
 

@@ -2,17 +2,10 @@
 #define REQUEST_CONFIG_H
 
 #include "protocol_adapter.h"
+#include "request_sim.h"   // 👈 now we actually know what RequestSIM is!
 
-// 🧩 Configuration namespace for all inverter request presets
 namespace RequestConfig {
-
-    // Build a default Modbus request configuration
     RequestSIM buildRequestConfig();
-
-    // (Optional) you can add more later, e.g.:
-    // RequestSIM buildStartup();
-    // RequestSIM buildDiagnostics();
-
 }
 
 #endif  // REQUEST_CONFIG_H
