@@ -7,12 +7,12 @@
 #include <Arduino.h>
 #include <vector>
 
-void initiateCompressionAndUpload() {
+std::vector<uint8_t> initiateCompression() {
     const auto& currentBuffer = Buffer::getAll();
 
     if (currentBuffer.empty()) {
         DEBUG_PRINTLN("[UploadManager] ⚠️ No data in buffer to upload.");
-        return;
+        return {}; // return empty vector
     }
 
     std::vector<uint16_t> rawValues;
@@ -79,6 +79,5 @@ void initiateCompressionAndUpload() {
     Buffer::clear();
     DEBUG_PRINTLN("[Buffer] 🧹 Main buffer cleared after compression.\n");
 
-    // ☁️ Upload compressed payload
-    UploadManager::uploadCompressed(compressed);
+    return compressed;
 }

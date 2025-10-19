@@ -16,7 +16,7 @@ namespace UploadManager {
     void begin(const String& url);
 
     // Upload compressed data
-    bool uploadCompressed(const std::vector<uint8_t>& data);
+    bool uploadtoCloud(const std::vector<uint8_t>& data);
 
     // Periodic handler (triggered every uploadInterval)
     void handle();

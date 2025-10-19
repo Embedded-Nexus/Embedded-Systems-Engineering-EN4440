@@ -1,16 +1,12 @@
-#ifndef ENCRYPTION_H
-#define ENCRYPTION_H
+#include "encryption.h"
 
-#include <Arduino.h>
+std::vector<uint8_t> encryptBuffer(const std::vector<uint8_t>& data, uint8_t key) {
+    std::vector<uint8_t> encrypted;
+    encrypted.reserve(data.size());  // reserve memory to match input
 
-namespace Encryption {
+    for (auto b : data) {
+        encrypted.push_back(b ^ key);  // XOR encryption
+    }
 
-    // Encrypt string with XOR
-    String encrypt(const String& input, const String& key);
-
-    // Decrypt (same function, symmetric)
-    String decrypt(const String& input, const String& key);
-
-}  // namespace Encryption
-
-#endif
+    return encrypted;
+}
