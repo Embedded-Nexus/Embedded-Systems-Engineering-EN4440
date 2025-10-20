@@ -9,6 +9,7 @@
 #include "encryption.h"
 #include "cloudClient.h"
 #include "security_layer.h"
+#include "update_config.h"
 
 namespace {
     UploadManager::UploadTarget target;
@@ -97,7 +98,21 @@ namespace UploadManager {
             // 🔹 Fetch configuration and command data
             String config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
             String command_response = cloud.fetch(target.fetchCommandEndpoint.c_str());
+            
 
+            if (config_response.length() > 0) {
+                DEBUG_PRINTLN("[UploadManager] ✅ Received config JSON:");
+                DEBUG_PRINTLN(config_response);
+            
+                String status = cloud.getValue(config_response, "status");
+                if (status == "success") {
+                    UpdateConfig::updateFromCloud(config_response);
+            
+                    // Optional: use the new interval value
+                    unsigned long newInterval = UpdateConfig::getLastInterval();
+                    DEBUG_PRINTF("[UploadManager] 🌐 Applied new interval: %lu ms\n", newInterval);
+                }
+            }
             
             
             ////////////////////////////////////////////////////////////////////////

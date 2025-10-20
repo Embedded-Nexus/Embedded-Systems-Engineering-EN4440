@@ -7,6 +7,7 @@
 #include "request_config.h"
 #include "polling_manager.h"
 #include "upload_manager.h"
+#include "request_sim.h"
 
 const char* ssid     = "Ruchira";
 const char* password = "1234567890";
@@ -59,11 +60,13 @@ void setup() {
 
     DEBUG_PRINTLN("=== Debug Mode Active ===");
 
+    //Create the Configuration(default)
+    requestSim = RequestConfig::buildRequestConfig();
     // 🌐 Connect to Wi-Fi and get real-world time
     connectToWiFiAndSyncTime();
 
     // 🕒 Initialize polling (every 10 seconds)
-    PollingManager::begin(5000);
+    PollingManager::begin(pollingInterval);
     UploadManager::begin("http://172.20.10.4:5000/data","http://172.20.10.4:5000/config","http://172.20.10.4:5000/commands");
 
 

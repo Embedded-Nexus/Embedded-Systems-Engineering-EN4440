@@ -2,16 +2,24 @@
 #define REQUEST_SIM_H
 
 #include <Arduino.h>
-#include "register_map.h"   // gives us REGISTER_COUNT
+#include "register_map.h"   // defines REGISTER_COUNT
 
-// Alias for clarity
 #define NUM_REGISTERS REGISTER_COUNT
 
-// Structure describing which registers to read/write and their data
 struct RequestSIM {
-    bool read[NUM_REGISTERS];         // true if this register should be read
-    bool write[NUM_REGISTERS];        // true if this register should be written
-    uint16_t writeData[NUM_REGISTERS]; // values to write if write[i] == true
+    bool read[NUM_REGISTERS];
+    bool write[NUM_REGISTERS];
+    uint16_t writeData[NUM_REGISTERS];
+
+    void clear();
 };
+
+// 👇 Declare the global instance (defined in request_sim.cpp)
+extern RequestSIM requestSim;
+extern unsigned long pollingInterval;  // ms between polling cycles
+
+
+void printGlobalRequestSim();  // helper to print current global config
+
 
 #endif  // REQUEST_SIM_H

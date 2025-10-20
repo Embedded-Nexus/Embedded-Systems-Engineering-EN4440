@@ -5,6 +5,7 @@
 #include "protocol_adapter.h"
 #include "inverter_comm.h"
 #include "debug_utils.h"
+#include "request_sim.h"
 
 namespace {
     unsigned long lastPollTime = 0;
@@ -26,19 +27,22 @@ namespace PollingManager {
         unsigned long now = millis();
 
         // Step 1️⃣: Perform data polling every pollInterval
-        if (now - lastPollTime >= pollInterval) {
+        if (now - lastPollTime >= pollingInterval) {
             lastPollTime = now;
             DEBUG_PRINTLN("\n================ POLLING CYCLE START =================");
 
             // Build Modbus request
-            RequestSIM req = RequestConfig::buildRequestConfig();
-            const auto& frames = ProtocolAdapter::decodeRequestStruct(req);
+           // Use the global instance defined in request_sim.cpp
+            const auto& frames = ProtocolAdapter::decodeRequestStruct(requestSim);
 
             // Simulate sending & receiving
             InverterSim::processFrameQueue(frames);
 
             // Append filtered data to buffer
-            Buffer::appendFromTemporary(req);
+            Buffer::appendFromTemporary(requestSim);
+
+            // printGlobalRequestSim();
+
 
             // 🔍 Print main buffer contents
             const auto& allSnapshots = Buffer::getAll();
