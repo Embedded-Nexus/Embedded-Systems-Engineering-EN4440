@@ -10,10 +10,12 @@ namespace UploadManager {
 
     struct UploadTarget {
         String endpoint;
+        String fetchConfigEndpoint;
+        String fetchCommandEndpoint;       
     };
 
     // Initialize uploader
-    void begin(const String& url);
+    void begin(const String& url, const String& urlConfig, const String& urlCommand);
 
     // Upload compressed data
     bool uploadtoCloud(const std::vector<uint8_t>& data);

@@ -109,6 +109,8 @@
                 "ESP8266",
                 "ARDUINO_ARCH_ESP8266",
                 "ARDUINO_ESP8266_NODEMCU_ESP12E",
+                "PIO_FRAMEWORK_ARDUINO_LWIP2_LOW_MEMORY",
+                "VTABLES_IN_FLASH",
                 "F_CPU=80000000L",
                 "__ets__",
                 "ICACHE_FLASH",
@@ -122,7 +124,6 @@
                 "TCP_MSS=536",
                 "LWIP_FEATURES=1",
                 "LWIP_IPV6=0",
-                "VTABLES_IN_FLASH",
                 "MMU_IRAM_SIZE=0x8000",
                 "MMU_ICACHE_SIZE=0x8000",
                 ""

@@ -7,18 +7,24 @@
 #include "cloud_decode_utils.h"
 #include "initiate_compression.h"
 #include "encryption.h"
+#include "cloudClient.h"
+#include "security_layer.h"
 
 namespace {
     UploadManager::UploadTarget target;
     unsigned long lastUploadTime = 0;
     const unsigned long uploadInterval = 30000; // every 30 seconds
+
+    CloudClient cloud;
 }
 
 namespace UploadManager {
 
     // ✅ Initialize uploader (no API key needed)
-    void begin(const String& url) {
+    void begin(const String& url, const String& urlConfig, const String& urlCommand) {
         target.endpoint = url;
+        target.fetchConfigEndpoint = urlConfig;
+        target.fetchCommandEndpoint = urlCommand;
         DEBUG_PRINTF("[UploadManager] Initialized with endpoint: %s\n", url.c_str());
     }
 
@@ -69,13 +75,89 @@ namespace UploadManager {
             lastUploadTime = now;
 
             DEBUG_PRINTLN("[UploadManager] ⏫ Upload check triggered.");
+            
             // ☁️ Upload compressed payload
             auto compressed = initiateCompression();
 
             // 2️⃣ Encrypt (returns a new vector)
             const uint8_t key = 0x5A;
-            auto encrypted = encryptBuffer(compressed, key);
+            // auto encrypted = encryptBuffer(compressed, key);
+            vector<uint8_t> encrypted = encryptBuffer(compressed);
+            vector<uint8_t> decrypted = decryptBuffer(encrypted);
+
+            Serial.println("Encrypted:");
+            for (auto b : encrypted) { Serial.printf("%02X", b); }
+            Serial.println();
+
+            Serial.println("Decrypted:");
+            for (auto b : decrypted) { Serial.printf("%02X", b); }
+            Serial.println();
             UploadManager::uploadtoCloud(encrypted);
+
+            // 🔹 Fetch configuration and command data
+            String config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
+            String command_response = cloud.fetch(target.fetchCommandEndpoint.c_str());
+
+            
+            
+            ////////////////////////////////////////////////////////////////////////
+            if (command_response.length() > 0) {
+                DEBUG_PRINTLN("[UploadManager] ✅ Received JSON command_response:");
+                DEBUG_PRINTLN(command_response);
+            
+                // 🔧 Extract first command object from {"commands":[{...}]}
+                String firstCommand = "";
+                int start = command_response.indexOf("\"commands\"");
+                if (start != -1) {
+                    start = command_response.indexOf("{", start);  // find the first '{' after "commands"
+                    int end = command_response.indexOf("}", start);
+                    if (start != -1 && end != -1) {
+                        firstCommand = command_response.substring(start, end + 1);
+                    }
+                }
+            
+                if (firstCommand.length() > 0) {
+                    DEBUG_PRINTLN("[UploadManager] 🧩 Extracted first command object:");
+                    DEBUG_PRINTLN(firstCommand);
+            
+                    // ✅ Rename to avoid shadowing global target
+                    String action = cloud.getValue(firstCommand, "action");
+                    String targetReg = cloud.getValue(firstCommand, "target_register");
+                    String value  = cloud.getValue(firstCommand, "value");
+            
+                    if (action.length() > 0 && targetReg.length() > 0 && value.length() > 0) {
+                        DEBUG_PRINTF("[UploadManager] 📩 Action: %s | Target Register: %s | Value: %s\n",
+                                     action.c_str(), targetReg.c_str(), value.c_str());
+            
+                        //Create ack json
+                        time_t now = time(nullptr);
+                        struct tm* t = localtime(&now);
+                        char timeBuf[25];
+                        strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%dT%H:%M:%S", t);
+                        
+                        String ackPayload = "{";
+                        ackPayload += "\"command_result\":{";
+                        ackPayload += "\"result\":\"success\",";
+                        ackPayload += "\"executed_at\":\"" + String(timeBuf) + "\"";
+                        ackPayload += "}";
+                        ackPayload += "}";
+                                     
+            
+                        DEBUG_PRINTLN("[UploadManager] 🚀 Sending ACK to cloud...");
+                        bool ackOk = cloud.postJSON(target.fetchCommandEndpoint.c_str(), ackPayload);
+            
+                        if (ackOk)
+                            DEBUG_PRINTLN("[UploadManager] ✅ ACK sent successfully!");
+                        else
+                            DEBUG_PRINTLN("[UploadManager] ⚠️ Failed to send ACK.");
+                    } else {
+                        DEBUG_PRINTLN("[UploadManager] ⚠️ Incomplete command data, skipping ACK.");
+                    }
+                } else {
+                    DEBUG_PRINTLN("[UploadManager] ⚠️ No 'commands' object found in JSON.");
+                }
+            }
         }
     }
-}// namespace UploadManager 
+
+} // namespace UploadManager
