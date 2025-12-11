@@ -9,8 +9,8 @@
 #include "upload_manager.h"
 #include "request_sim.h"
 
-const char* ssid     = "Ruchira";
-const char* password = "1234567890";
+const char* ssid     = "dinujaya";
+const char* password = "helloworld";
 
 // 🌐 Wi-Fi + NTP Setup
 void connectToWiFiAndSyncTime() {
@@ -67,7 +67,7 @@ void setup() {
 
     // 🕒 Initialize polling (every 10 seconds)
     PollingManager::begin(pollingInterval);
-    UploadManager::begin("http://172.20.10.4:5000/data","http://172.20.10.4:5000/config","http://172.20.10.4:5000/commands");
+    UploadManager::begin("http://10.10.30.2:5000/data","http://10.10.30.2:5000/config","http://10.10.30.2:5000/commands");
 
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");
