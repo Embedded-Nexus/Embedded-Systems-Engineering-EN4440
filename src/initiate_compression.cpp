@@ -43,8 +43,14 @@ std::vector<uint8_t> initiateCompression() {
                  (int)rawValues.size());
 
     Serial.println("[DEBUG] RawValues (uint16_t) before compression:");
-    for (auto v : rawValues) Serial.printf("%u ", v);
+    size_t rawLimit = min(rawValues.size(), (size_t)50);  // Limit to 50 values
+    for (size_t i = 0; i < rawLimit; i++) {
+        Serial.printf("%u ", rawValues[i]);
+        if ((i + 1) % 10 == 0) { Serial.print(" | "); yield(); }  // Separator every 10 values
+    }
+    if (rawValues.size() > 50) Serial.printf("... (%d more)", rawValues.size() - 50);
     Serial.println();
+    Serial.flush();
 
     // 🔹 Compress and benchmark
     auto result = Compression::TimeSeriesCompressor::benchmark(rawValues, REGISTER_COUNT + 6);
@@ -56,8 +62,14 @@ std::vector<uint8_t> initiateCompression() {
     std::vector<uint8_t> compressed = Compression::TimeSeriesCompressor::compress(rawValues, REGISTER_COUNT + 6);
 
     Serial.printf("[DEBUG] Compressed bytes:\n");
-    for (auto b : compressed) Serial.printf("%02X ", b);
+    size_t compLimit = min(compressed.size(), (size_t)64);
+    for (size_t i = 0; i < compLimit; i++) {
+        Serial.printf("%02X ", compressed[i]);
+        if ((i + 1) % 16 == 0) { Serial.println(); yield(); }
+    }
+    if (compressed.size() > 64) Serial.printf("... (%d more bytes)", compressed.size() - 64);
     Serial.println();
+    Serial.flush();
 
     // 🔹 Verify decompression and decoding
     auto decompressed = Compression::TimeSeriesCompressor::decompress(compressed, REGISTER_COUNT + 6);
@@ -65,8 +77,14 @@ std::vector<uint8_t> initiateCompression() {
     printDecodedSnapshots(decoded);
 
     Serial.println("[DEBUG] Decompressed values:");
-    for (auto v : decompressed) Serial.printf("%u ", v);
+    size_t decomLimit = min(decompressed.size(), (size_t)50);
+    for (size_t i = 0; i < decomLimit; i++) {
+        Serial.printf("%u ", decompressed[i]);
+        if ((i + 1) % 10 == 0) { Serial.print(" | "); yield(); }
+    }
+    if (decompressed.size() > 50) Serial.printf("... (%d more)", decompressed.size() - 50);
     Serial.println();
+    Serial.flush();
 
     float ratio = (result.origBytes > 0)
                     ? (100.0f * (result.origBytes - result.compBytes) / result.origBytes)

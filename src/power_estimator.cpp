@@ -55,6 +55,7 @@ void pe_tickAndMaybePrint() {
 
   Serial.printf("[Power] avg=%.2f mA  est=%.4f mWh\n",
                 avg_mA, est_mWh);
+  Serial.flush();  // Ensure data is sent before reset
 
   // reset counters for next interval
   _idle_ms = _cpu_ms = _wifi_ms = _sleep_ms = 0;

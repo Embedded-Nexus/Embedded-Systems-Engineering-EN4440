@@ -67,7 +67,9 @@ namespace UploadManager {
         int httpCode = http.POST((uint8_t*)data.data(), data.size());
 
         // Capture response payload (if any) for diagnostics
-        String httpBody = http.getString();
+        String httpBody;
+        httpBody.reserve(256);  // Reserve memory to prevent fragmentation
+        httpBody = http.getString();
 
         if (httpCode > 0) {
             DEBUG_PRINTF("[UploadManager] 🌐 Upload response: %d\n", httpCode);
@@ -97,6 +99,15 @@ namespace UploadManager {
         if (now - lastUploadTime < uploadInterval) return;
         lastUploadTime = now;
 
+        // Check available heap before processing
+        uint32_t freeHeap = ESP.getFreeHeap();
+        DEBUG_PRINTF("[UploadManager] Free Heap: %u bytes\n", freeHeap);
+        
+        if (freeHeap < 8192) {  // Less than 8KB free
+            DEBUG_PRINTLN("[UploadManager] ⚠️ Low memory! Skipping upload cycle.");
+            return;
+        }
+
         DEBUG_PRINTLN("[UploadManager] ⏫ Upload check triggered.");
 
         // 🔄 Check for firmware updates at start of each upload cycle
@@ -121,12 +132,24 @@ namespace UploadManager {
             pe_addCpuMs((__t3 - __t2) / 1000UL);
 
         Serial.println("Encrypted:");
-        for (auto b : encrypted) Serial.printf("%02X", b);
+        size_t encLimit = min(encrypted.size(), (size_t)64);  // Limit to 64 bytes
+        for (size_t i = 0; i < encLimit; i++) {
+            Serial.printf("%02X", encrypted[i]);
+            if ((i + 1) % 16 == 0) { Serial.println(); yield(); }  // Line break every 16 bytes
+        }
+        if (encrypted.size() > 64) Serial.printf("... (%d more bytes)", encrypted.size() - 64);
         Serial.println();
+        Serial.flush();  // Ensure data is sent
 
-            Serial.println("Decrypted:");
-            for (auto b : decrypted) { Serial.printf("%02X", b); }
-            Serial.println();
+        Serial.println("Decrypted:");
+        size_t decLimit = min(decrypted.size(), (size_t)64);  // Limit to 64 bytes
+        for (size_t i = 0; i < decLimit; i++) {
+            Serial.printf("%02X", decrypted[i]);
+            if ((i + 1) % 16 == 0) { Serial.println(); yield(); }  // Line break every 16 bytes
+        }
+        if (decrypted.size() > 64) Serial.printf("... (%d more bytes)", decrypted.size() - 64);
+        Serial.println();
+        Serial.flush();  // Ensure data is sent
             
             // Upload compressed+encrypted data
             bool ok = UploadManager::uploadtoCloud(encrypted);
@@ -138,13 +161,20 @@ namespace UploadManager {
                 DEBUG_PRINTLN("[UploadManager] ❌ Upload failed → buffer NOT cleared");
             }
         // 🔹 Fetch configuration and command data
-        String config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
-        String command_response = cloud.fetch(target.fetchCommandEndpoint.c_str());
+        yield();  // Prevent watchdog timeout
+        String config_response;
+        config_response.reserve(512);
+        config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
+        
+        yield();  // Prevent watchdog timeout
+        String command_response;
+        command_response.reserve(1024);
+        command_response = cloud.fetch(target.fetchCommandEndpoint.c_str());
 
         // ================================================================
         // 🔧 CONFIGURATION HANDLING
         // ================================================================
-        if (config_response.length() > 0) {
+        if (config_response.length() > 0 && config_response.length() < 2048) {
             DEBUG_PRINTLN("[UploadManager] ✅ Received config JSON:");
             DEBUG_PRINTLN(config_response);
 
@@ -157,7 +187,7 @@ namespace UploadManager {
         // ================================================================
         // ⚙️ COMMAND HANDLING
         // ================================================================
-        if (command_response.length() > 0) {
+        if (command_response.length() > 0 && command_response.length() < 4096) {
             DEBUG_PRINTLN("[UploadManager] ✅ Received JSON command_response:");
             DEBUG_PRINTLN(command_response);
 
@@ -176,10 +206,12 @@ namespace UploadManager {
             }
 
             String commandsBlock = command_response.substring(arrayStart, arrayEnd);
+            commandsBlock.trim();  // Remove whitespace
             int start = 0;
 
             // 🔁 Parse all commands in the array
             while (true) {
+                yield();  // Prevent watchdog timeout in loop
                 start = commandsBlock.indexOf("{", start);
                 if (start == -1) break;
 
@@ -187,6 +219,7 @@ namespace UploadManager {
                 if (end == -1) break;
 
                 String cmdObj = commandsBlock.substring(start, end + 1);
+                cmdObj.trim();  // Remove whitespace
                 start = end + 1;
 
                 // Extract key values
@@ -219,8 +252,12 @@ namespace UploadManager {
                     continue;
                 }
 
-                // 🔹 Decode into Modbus frames
-                ProtocolAdapter::decodeRequestStruct(cloudRequestSim);
+                // 🔹 Decode into Modbus frames (adds to frameQueue)
+                const auto& frames = ProtocolAdapter::decodeRequestStruct(cloudRequestSim);
+                
+                // 🔹 Process the frames immediately
+                InverterSim::processFrameQueue(frames);
+                frameQueue.clear();
             }
 
             // ================================================================
@@ -231,7 +268,9 @@ namespace UploadManager {
             char timeBuf[25];
             strftime(timeBuf, sizeof(timeBuf), "%Y-%m-%dT%H:%M:%S", t);
 
-            String ackPayload = "{";
+            String ackPayload;
+            ackPayload.reserve(150);  // Pre-allocate to prevent fragmentation
+            ackPayload = "{";
             ackPayload += "\"command_result\":{";
             ackPayload += "\"result\":\"success\",";
             ackPayload += "\"executed_at\":\"" + String(timeBuf) + "\"";
@@ -239,6 +278,7 @@ namespace UploadManager {
             ackPayload += "}";
 
             DEBUG_PRINTLN("[UploadManager] 🚀 Sending ACK to cloud...");
+            yield();  // Prevent watchdog timeout
             bool ackOk = cloud.postJSON(target.fetchCommandEndpoint.c_str(), ackPayload);
 
             if (ackOk)
@@ -246,6 +286,11 @@ namespace UploadManager {
             else
                 DEBUG_PRINTLN("[UploadManager] ⚠️ Failed to send ACK.");
         }
+        
+        // Free memory from large strings
+        command_response = String();
+        config_response = String();
+        yield();  // Final yield before exit
     }
 
 } // namespace UploadManager
