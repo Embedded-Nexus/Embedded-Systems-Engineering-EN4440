@@ -23,7 +23,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-server.log
 
 # Flask
 instance/
@@ -54,6 +53,9 @@ Thumbs.db
 
 # Logs
 *.log
+*.db
+*.pyc
+c_cpp_properties.json
 
 # Environment
 .env
