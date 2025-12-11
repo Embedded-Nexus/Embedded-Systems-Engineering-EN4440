@@ -7,53 +7,123 @@ from app.models.database import (
     get_data_by_timestamp_range,
     get_data_count
 )
+from app.utils.security import decrypt_buffer
+from datetime import datetime
+import struct
 
 @data_bp.route('/data', methods=['POST'])
 def receive_data():
     """
     POST /data
     Receives data from the embedded device
-    Expected JSON body:
-    {
-        "timestamp": "2025-10-18T12:00:00",
-        "data": [100, 200, -1, 150, -1, 300, 250, -1, 180, 220]
-    }
+    
+    Supports two formats:
+    1. Binary encrypted data (Content-Type: application/octet-stream)
+       - Sends raw encrypted payload from security layer
+       - Will be decrypted, decompressed, and stored
+    
+    2. JSON format (Content-Type: application/json):
+       {
+           "timestamp": "2025-10-18T12:00:00",
+           "data": [100, 200, -1, 150, -1, 300, 250, -1, 180, 220]
+       }
     """
     try:
-        payload = request.get_json()
+        content_type = request.content_type or ""
         
-        if not payload:
+        # ========== Handle Binary Encrypted Data ==========
+        if "application/octet-stream" in content_type:
+            encrypted_data = request.get_data()
+            
+            if not encrypted_data:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'No binary data provided'
+                }), 400
+            
+            print(f"[Data Route] Received {len(encrypted_data)} bytes of encrypted data")
+            print(f"[Data Route] Hex: {encrypted_data.hex()}")
+            
+            # Decrypt the data
+            decrypted = decrypt_buffer(encrypted_data)
+            if decrypted is None:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Decryption failed or authentication error'
+                }), 400
+            
+            print(f"[Data Route] Decrypted {len(decrypted)} bytes")
+            print(f"[Data Route] Decrypted hex: {decrypted.hex()}")
+            
+            # TODO: Decompress and parse the decrypted data
+            # For now, store raw decrypted data with current timestamp
+            timestamp = datetime.utcnow().isoformat()
+            
+            # Parse decrypted data - expecting 10 register values (2 bytes each)
+            if len(decrypted) >= 20:
+                # Extract 10 16-bit values (little-endian)
+                data = []
+                for i in range(10):
+                    offset = i * 2
+                    val = struct.unpack('<h', decrypted[offset:offset+2])[0]
+                    data.append(val)
+                
+                print(f"[Data Route] Parsed registers: {data}")
+                
+                # Insert data
+                record_id = insert_data(timestamp, data)
+                
+                return jsonify({
+                    'status': 'success',
+                    'message': 'Binary data received and decrypted successfully',
+                    'id': record_id,
+                    'decrypted_size': len(decrypted)
+                }), 201
+            else:
+                return jsonify({
+                    'status': 'error',
+                    'message': f'Decrypted data too small: {len(decrypted)} bytes (need >= 20)'
+                }), 400
+        
+        # ========== Handle JSON Data ==========
+        else:
+            payload = request.get_json()
+            
+            if not payload:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'No data provided'
+                }), 400
+            
+            timestamp = payload.get('timestamp')
+            data = payload.get('data')
+            
+            # Validate inputs
+            if not timestamp:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'timestamp is required'
+                }), 400
+            
+            if not data or not isinstance(data, list) or len(data) != 10:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'data must be a list of 10 elements'
+                }), 400
+            
+            # Insert data
+            record_id = insert_data(timestamp, data)
+            
             return jsonify({
-                'status': 'error',
-                'message': 'No data provided'
-            }), 400
-        
-        timestamp = payload.get('timestamp')
-        data = payload.get('data')
-        
-        # Validate inputs
-        if not timestamp:
-            return jsonify({
-                'status': 'error',
-                'message': 'timestamp is required'
-            }), 400
-        
-        if not data or not isinstance(data, list) or len(data) != 10:
-            return jsonify({
-                'status': 'error',
-                'message': 'data must be a list of 10 elements'
-            }), 400
-        
-        # Insert data
-        record_id = insert_data(timestamp, data)
-        
-        return jsonify({
-            'status': 'success',
-            'message': 'Data received successfully',
-            'id': record_id
-        }), 201
+                'status': 'success',
+                'message': 'Data received successfully',
+                'id': record_id
+            }), 201
         
     except Exception as e:
+        print(f"[Data Route] Exception: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'status': 'error',
             'message': str(e)

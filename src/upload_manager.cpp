@@ -93,6 +93,15 @@ namespace UploadManager {
             Serial.println("Decrypted:");
             for (auto b : decrypted) { Serial.printf("%02X", b); }
             Serial.println();
+
+            // 🔐 Print uploading data before upload
+            Serial.printf("[Upload] 📤 Uploading %d bytes of encrypted data:\n", encrypted.size());
+            for (size_t i = 0; i < encrypted.size(); i++) {
+                Serial.printf("%02X", encrypted[i]);
+                if ((i + 1) % 16 == 0) Serial.println();
+            }
+            if (encrypted.size() % 16 != 0) Serial.println();
+
             UploadManager::uploadtoCloud(encrypted);
 
             // 🔹 Fetch configuration and command data
