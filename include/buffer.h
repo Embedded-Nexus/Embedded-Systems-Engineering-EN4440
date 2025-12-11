@@ -12,6 +12,7 @@ namespace Buffer {
     void appendFromTemporary(const RequestSIM& config);
     const std::vector<TimedSnapshot>& getAll();
     void clear();
+    bool hasOverflowed();
 
 }  // namespace Buffer
 

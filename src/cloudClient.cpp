@@ -1,5 +1,7 @@
 #include "CloudClient.h"
 #include <ESP8266WiFi.h>
+#include "power_estimator.h"
+
 
 CloudClient::CloudClient() {}
 
@@ -18,7 +20,12 @@ String CloudClient::fetch(const char* url) {
     // http.setInsecure();
 
     Serial.printf("[CloudClient] GET %s\n", url);
+    
+    unsigned long __wifiStart = millis();
+
     int httpCode = http.GET();
+    unsigned long __wifiEnd = millis();
+    pe_addWifiMs(__wifiEnd - __wifiStart);
 
     if (httpCode <= 0) {
         _lastError = http.errorToString(httpCode);
@@ -95,7 +102,13 @@ bool CloudClient::postJSON(const char* url, const String& jsonPayload) {
     Serial.printf("[CloudClient] POST %s\n", url);
     Serial.printf("[CloudClient] Payload: %s\n", jsonPayload.c_str());
 
+    unsigned long __wifiStart = millis();
     int httpCode = http.POST(jsonPayload);
+
+
+    // ===== POWER ESTIMATOR: END WIFI BURST =====
+    unsigned long __wifiEnd = millis();
+    pe_addWifiMs(__wifiEnd - __wifiStart);
 
     if (httpCode <= 0) {
         _lastError = http.errorToString(httpCode);

@@ -8,6 +8,8 @@
 namespace Buffer {
 
     static std::vector<TimedSnapshot> mainBuffer;
+    static const size_t MAX_BUFFER_SIZE = 100;   // your limit
+    static bool bufferOverflow = false;          // flag
 
     // --------------------------------------------------------------------
     // Append filtered snapshot(s) from TemporaryBuffer
@@ -21,22 +23,31 @@ namespace Buffer {
 
         // Process each snapshot stored in TemporaryBuffer
         for (const auto& snapshot : tempData) {
-            TimedSnapshot filtered;
-            filtered.timestamp = snapshot.timestamp;
-            filtered.values.assign(NUM_REGISTERS, -1.0f);  // initialize all unread
 
-            // Copy only registers flagged for reading
-            for (size_t i = 0; i < snapshot.values.size() && i < NUM_REGISTERS; ++i) {
-                if (config.read[i]) {
-                    filtered.values[i] = snapshot.values[i];
-                }
+        // --- Create filtered snapshot ---
+        TimedSnapshot filtered;
+        filtered.timestamp = snapshot.timestamp;
+        filtered.values.assign(NUM_REGISTERS, -1.0f);
+
+        for (size_t i = 0; i < snapshot.values.size() && i < NUM_REGISTERS; ++i) {
+            if (config.read[i]) {
+                filtered.values[i] = snapshot.values[i];
             }
-
-            mainBuffer.push_back(filtered);
-
-            DEBUG_PRINTF("[Buffer] ✅ Added filtered snapshot at %s\n",
-                         filtered.timestamp.c_str());
         }
+
+        // --- Enforce max buffer size ---
+        if (mainBuffer.size() >= MAX_BUFFER_SIZE) {
+            bufferOverflow = true;     // mark overflow
+            mainBuffer.erase(mainBuffer.begin());  // remove oldest
+        }
+
+        // --- Push newest snapshot ---
+        mainBuffer.push_back(filtered);
+
+        DEBUG_PRINTF("[Buffer] Added snapshot @ %s (size=%d)\n",
+                    filtered.timestamp.c_str(), mainBuffer.size());
+        }
+
 
         DEBUG_PRINTF("[Buffer] 📦 Main buffer now has %d snapshot(s)\n",
                      (int)mainBuffer.size());
@@ -55,6 +66,9 @@ namespace Buffer {
     void clear() {
         mainBuffer.clear();
         DEBUG_PRINTLN("[Buffer] 🧹 Main buffer cleared.");
+    }
+    bool hasOverflowed() {
+    return bufferOverflow;
     }
 
 }  // namespace Buffer

@@ -10,6 +10,8 @@
 #include "cloudClient.h"
 #include "security_layer.h"
 #include "update_config.h"
+#include "power_estimator.h"
+
 
 namespace {
     UploadManager::UploadTarget target;
@@ -83,8 +85,17 @@ namespace UploadManager {
             // 2️⃣ Encrypt (returns a new vector)
             const uint8_t key = 0x5A;
             // auto encrypted = encryptBuffer(compressed, key);
+           // ===== Power Estimator: measure encryption time =====
+            unsigned long __t0 = micros();
             vector<uint8_t> encrypted = encryptBuffer(compressed);
+            unsigned long __t1 = micros();
+            pe_addCpuMs((__t1 - __t0) / 1000UL);
+
+            // ===== Power Estimator: measure decryption time =====
+            unsigned long __t2 = micros();
             vector<uint8_t> decrypted = decryptBuffer(encrypted);
+            unsigned long __t3 = micros();
+            pe_addCpuMs((__t3 - __t2) / 1000UL);
 
             Serial.println("Encrypted:");
             for (auto b : encrypted) { Serial.printf("%02X", b); }
@@ -93,7 +104,17 @@ namespace UploadManager {
             Serial.println("Decrypted:");
             for (auto b : decrypted) { Serial.printf("%02X", b); }
             Serial.println();
-            UploadManager::uploadtoCloud(encrypted);
+            
+            // Upload compressed+encrypted data
+            bool ok = UploadManager::uploadtoCloud(encrypted);
+
+            if (ok) {
+                DEBUG_PRINTLN("[UploadManager] ✅ Upload successful → clearing buffer");
+                Buffer::clear();
+            } else {
+                DEBUG_PRINTLN("[UploadManager] ❌ Upload failed → buffer NOT cleared");
+            }
+
 
             // 🔹 Fetch configuration and command data
             String config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
