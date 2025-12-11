@@ -10,15 +10,11 @@
 #include "cloudClient.h"
 #include "security_layer.h"
 #include "update_config.h"
-<<<<<<< HEAD
+#include "power_estimator.h"
 #include "request_sim.h"
 #include "protocol_adapter.h"
 #include "inverterSIM_utils.h"
 #include "frame_queue.h"
-=======
-#include "power_estimator.h"
-
->>>>>>> 48d2d0f5ec16b506dc6f234a2839defb3ef763d1
 
 // ⚙️ Local namespace variables
 namespace {
