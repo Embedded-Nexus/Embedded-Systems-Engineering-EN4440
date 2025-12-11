@@ -69,10 +69,12 @@ namespace PollingManager {
             for (size_t s = 0; s < allSnapshots.size(); ++s) {
                 const auto& snap = allSnapshots[s];
                 Serial.printf("  Snapshot %d @ %s\n", (int)s + 1, snap.timestamp.c_str());
+                yield();  // Prevent buffer overflow
 
                 // Print register values
                 for (size_t i = 0; i < snap.values.size(); ++i) {
                         Serial.printf("    R%-3d = %.2f\n", (int)i, snap.values[i]);
+                        if (i % 5 == 0) yield();  // Prevent buffer overflow every 5 values
                 }
             }
         }

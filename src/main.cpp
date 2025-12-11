@@ -69,6 +69,8 @@ void printErrorLogs() {
 void setup() {
     Serial.begin(9600);
     delay(200);
+    Serial.flush();  // Clear any startup garbage
+    delay(100);
 
     DEBUG_PRINTLN("=== Debug Mode Active ===");
 

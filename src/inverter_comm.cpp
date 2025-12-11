@@ -148,7 +148,9 @@ namespace InverterSim {
             } else {
                 Serial.printf("  R%-3d = (unread)\n", (int)i);
             }
+            if (i % 5 == 0) yield();  // Prevent buffer overflow every 5 registers
         }
+        Serial.flush();
 
     
         DEBUG_PRINTLN("[InverterSim] === Response Frame Processing Complete ===");
@@ -175,6 +177,29 @@ namespace InverterSim {
 
         uint8_t funcCode = frame[1];
 
+        // ----------------------------------------------------------
+        //      CHECK FOR MODBUS EXCEPTION RESPONSE
+        // ----------------------------------------------------------
+        if (funcCode & 0x80) {
+            uint8_t exceptionCode = frame[2];
+
+            // Table of exception strings
+            const char* exceptionText = nullptr;
+            switch (exceptionCode) {
+                case 0x01: exceptionText = "Illegal Function"; break;
+                case 0x02: exceptionText = "Illegal Data Address"; break;
+                case 0x03: exceptionText = "Illegal Data Value"; break;
+                case 0x04: exceptionText = "Slave Device Failure"; break;
+                case 0x05: exceptionText = "Acknowledge (processing delayed)"; break;
+                case 0x06: exceptionText = "Slave Device Busy"; break;
+                case 0x08: exceptionText = "Memory Parity Error"; break;
+                case 0x0A: exceptionText = "Gateway Path Unavailable"; break;
+                case 0x0B: exceptionText = "Gateway Target Device Failed to Respond"; break;
+                default:   exceptionText = "Unknown Exception Code"; break;
+            }
+            DEBUG_PRINTF("[InverterSim] ⚠ Modbus Exception: FC=0x%02X Code=0x%02X (%s)\n", funcCode, exceptionCode, exceptionText);
+            return snapshot;
+        }
         if (funcCode == 0x03) { // READ RESPONSE
             uint8_t byteCount = frame[2];
             uint8_t numRegisters = byteCount / 2;

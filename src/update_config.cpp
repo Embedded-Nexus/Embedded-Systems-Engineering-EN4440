@@ -78,7 +78,9 @@ namespace UpdateConfig {
         Serial.println("[UpdateConfig] ✅ Final requestSim.read[]:");
         for (int i = 0; i < NUM_REGISTERS; i++) {
             Serial.printf("  read[%d] = %d\n", i, requestSim.read[i]);
+            if (i % 10 == 0) yield();  // Prevent buffer overflow every 10 items
         }
+        Serial.flush();
     }
 
     unsigned long getLastInterval() { return lastInterval; }
