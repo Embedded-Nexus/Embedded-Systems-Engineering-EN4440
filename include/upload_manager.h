@@ -17,6 +17,9 @@ namespace UploadManager {
     // Initialize uploader
     void begin(const String& url, const String& urlConfig, const String& urlCommand);
 
+    // Initialize firmware updater (called from main to configure FW updates per upload cycle)
+    void initializeFirmwareUpdater(const String& firmwareEndpoint, const String& firmwareVersion);
+
     // Upload compressed data
     bool uploadtoCloud(const std::vector<uint8_t>& data);
 

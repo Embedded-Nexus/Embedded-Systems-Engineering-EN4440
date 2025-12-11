@@ -156,22 +156,14 @@ def get_firmware():
         }
     return None
 
-def insert_firmware(file_path, update_level):
+def insert_firmware(file_path, version, update_level):
     """Insert new firmware and update config version"""
     db = get_db()
     cursor = db.cursor()
-    # Get current firmware version
-    cursor.execute('SELECT version FROM firmware ORDER BY id DESC LIMIT 1')
-    row = cursor.fetchone()
-    current_version = row['version'] if row else '1.0.0'
-    # Increment version (last digit)
-    version_parts = current_version.split('.')
-    version_parts[-1] = str(int(version_parts[-1]) + 1)
-    new_version = '.'.join(version_parts)
-    # Insert new firmware record
+    # Insert new firmware record with the provided version
     cursor.execute(
         'INSERT INTO firmware (file_path, update_level, version) VALUES (?, ?, ?)',
-        (file_path, update_level, new_version)
+        (file_path, update_level, version)
     )
     # Also update config version
     cursor.execute('SELECT reg_read, interval FROM config ORDER BY id DESC LIMIT 1')
@@ -180,10 +172,10 @@ def insert_firmware(file_path, update_level):
     interval = config_row['interval'] if config_row else 1000
     cursor.execute(
         'INSERT INTO config (reg_read, interval, version) VALUES (?, ?, ?)',
-        (json.dumps(reg_read), interval, new_version)
+        (json.dumps(reg_read), interval, version)
     )
     db.commit()
-    return new_version
+    return version
 
 def update_config(reg_read=None, interval=None):
     """Update configuration"""

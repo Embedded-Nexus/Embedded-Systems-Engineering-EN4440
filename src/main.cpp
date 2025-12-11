@@ -80,7 +80,9 @@ void setup() {
     // 🕒 Initialize polling (every 10 seconds)
     PollingManager::begin(pollingInterval);
     UploadManager::begin("http://192.168.137.1:5000/data","http://192.168.137.1:5000/config","http://192.168.137.1:5000/commands");
-
+    
+    // 🔄 Initialize firmware updater (version checked at each upload cycle)
+    UploadManager::initializeFirmwareUpdater("http://192.168.137.1:5000/firmware", "1.0.4");
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");
     pe_begin(5000); // report every 5000 ms
@@ -101,7 +103,7 @@ void loop() {
     pe_addIdleMs(__pe_dt);
 
     PollingManager::handle();
-    UploadManager::handle();
+    UploadManager::handle();  // 🔄 Includes firmware version check at start of upload cycle
     pe_tickAndMaybePrint();
 
     // ---- Log print every 60 seconds ----

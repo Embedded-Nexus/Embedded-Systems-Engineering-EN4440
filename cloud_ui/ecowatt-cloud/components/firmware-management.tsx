@@ -12,6 +12,26 @@ import { API_ENDPOINTS } from "@/lib/config"
 
 export default function FirmwareManagement() {
   const [currentVersion, setCurrentVersion] = useState("1.0.0")
+  const [version, setVersion] = useState("1.0.1")
+  const [updateLevel, setUpdateLevel] = useState("1")
+
+  // Helper function to calculate next version based on level
+  const calculateNextVersion = (current: string, level: string): string => {
+    const parts = current.split(".").map(Number)
+    if (parts.length !== 3) return current
+
+    const [major, minor, patch] = parts
+    switch (level) {
+      case "1": // Minor update - increment patch
+        return `${major}.${minor}.${patch + 1}`
+      case "2": // Standard update - increment minor, reset patch
+        return `${major}.${minor + 1}.0`
+      case "3": // Major update - increment major, reset minor and patch
+        return `${major + 1}.0.0`
+      default:
+        return current
+    }
+  }
 
   // Fetch current version from config on mount
   React.useEffect(() => {
@@ -21,6 +41,9 @@ export default function FirmwareManagement() {
         const data = await response.json()
         if (data.status === "success" && data.config && data.config.version) {
           setCurrentVersion(data.config.version)
+          // Calculate and set next version based on default level (1)
+          const nextVersion = calculateNextVersion(data.config.version, "1")
+          setVersion(nextVersion)
         }
       } catch (e) {
         // ignore error, fallback to default version
@@ -28,7 +51,12 @@ export default function FirmwareManagement() {
     }
     fetchConfigVersion()
   }, [])
-  const [updateLevel, setUpdateLevel] = useState("1")
+
+  // Update version when level changes
+  React.useEffect(() => {
+    const nextVersion = calculateNextVersion(currentVersion, updateLevel)
+    setVersion(nextVersion)
+  }, [updateLevel, currentVersion])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -43,6 +71,7 @@ export default function FirmwareManagement() {
     try {
       const formData = new FormData()
       formData.append("file", file)
+      formData.append("version", version)
       formData.append("level", updateLevel)
 
       const response = await fetch(API_ENDPOINTS.firmware, {
@@ -126,6 +155,21 @@ export default function FirmwareManagement() {
           {/* Upload Section */}
           <div className="space-y-4">
             <Label className="text-base font-semibold">Upload New Firmware</Label>
+
+            <div className="space-y-2">
+              <Label htmlFor="firmware-version">Firmware Version (X.Y.Z)</Label>
+              <Input
+                id="firmware-version"
+                type="text"
+                placeholder="Auto-calculated based on update level"
+                value={version}
+                onChange={(e) => setVersion(e.target.value)}
+                disabled={loading}
+                pattern="^\d+\.\d+\.\d+$"
+                title="Version must be in format X.Y.Z (e.g., 1.0.4)"
+              />
+              <p className="text-xs text-muted-foreground">Auto-calculated from current version ({currentVersion}) based on update level. You can edit manually if needed.</p>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="update-level">Update Level</Label>

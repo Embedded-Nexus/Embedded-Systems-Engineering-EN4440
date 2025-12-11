@@ -602,3 +602,793 @@
 2025-12-12 01:44:14,348 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:44:14] "GET /config HTTP/1.1" 200 -
 2025-12-12 01:44:14,443 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:44:14] "GET /commands HTTP/1.1" 200 -
 2025-12-12 01:44:15,425 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:44:15] "POST /commands HTTP/1.1" 200 -
+2025-12-12 01:48:16,993 [INFO] cloud.server: Initializing database...
+2025-12-12 01:48:16,995 [INFO] cloud.server: Database initialized.
+2025-12-12 01:48:16,996 [INFO] cloud.server: App teardown registered.
+2025-12-12 01:48:17,004 [INFO] cloud.server: Blueprints registered.
+2025-12-12 01:48:17,061 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 01:48:17,062 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 01:48:17,063 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 01:48:17,384 [INFO] cloud.server: Initializing database...
+2025-12-12 01:48:17,385 [INFO] cloud.server: Database initialized.
+2025-12-12 01:48:17,385 [INFO] cloud.server: App teardown registered.
+2025-12-12 01:48:17,391 [INFO] cloud.server: Blueprints registered.
+2025-12-12 01:48:17,417 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 01:48:17,423 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 01:49:39,112 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:39] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:49:39,154 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:39] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:49:39,201 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:39] "GET /data?start_id=1686&end_id=1705 HTTP/1.1" 200 -
+2025-12-12 01:49:48,495 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:49:48] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 01:49:48,922 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:49:48] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:49:49,014 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:49:49] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:49:49,993 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:49:49] "POST /commands HTTP/1.1" 200 -
+2025-12-12 01:49:56,768 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:56] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:49:56,785 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:56] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:49:56,804 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:56] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:49:59,864 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:59] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:49:59,885 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:59] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:49:59,900 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:49:59] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:50:14,734 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:50:14,740 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:50:16,015 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:50:16,023 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:50:16,024 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:50:16,034 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:50:16,035 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:50:16,045 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:16] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:50:21,516 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:21] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:50:21,530 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:21] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:50:21,544 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:21] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:50:26,584 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:26] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:50:26,600 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:26] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:50:26,615 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:50:26] "GET /data?start_id=1689&end_id=1708 HTTP/1.1" 200 -
+2025-12-12 01:50:34,958 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:50:34] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 01:50:35,399 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:50:35] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:50:35,490 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:50:35] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:50:36,474 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:50:36] "POST /commands HTTP/1.1" 200 -
+2025-12-12 01:51:09,347 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:51:09] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 01:51:09,786 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:51:09] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:51:09,875 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:51:09] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:51:10,861 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:51:10] "POST /commands HTTP/1.1" 200 -
+2025-12-12 01:51:23,178 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:23] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:23,193 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:23] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:23,214 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:23] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:26,556 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:26] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:51:26,562 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:26] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:51:34,153 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:34] "OPTIONS /commands HTTP/1.1" 200 -
+2025-12-12 01:51:34,161 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:34] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-12-12 01:51:34,170 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:34] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:51:36,827 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:36,834 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:36,835 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:36,843 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:36,846 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:36,858 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:36] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:40,135 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:40] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:40,152 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:40] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:40,165 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:40] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:41,231 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:41,247 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:41,260 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:41,752 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data HTTP/1.1" 200 -
+2025-12-12 01:51:41,770 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 01:51:41,783 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:41] "GET /data?start_id=1691&end_id=1710 HTTP/1.1" 200 -
+2025-12-12 01:51:44,689 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:44] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:51:44,695 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:44] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:51:46,083 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:46] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:51:47,483 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:47] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:51:50,691 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:50] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:51:56,359 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:51:56] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:52:00,527 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 01:52:00] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:52:01,433 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:52:01] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 01:52:01,873 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:52:01] "GET /config HTTP/1.1" 200 -
+2025-12-12 01:52:01,963 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:52:01] "GET /commands HTTP/1.1" 200 -
+2025-12-12 01:52:03,242 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 01:52:03] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:10:16,720 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:10:16] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:10:17,094 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:10:17] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:10:17,158 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:10:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:10:18,136 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:10:18] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:11:09,245 [INFO] cloud.server: Initializing database...
+2025-12-12 02:11:09,247 [INFO] cloud.server: Database initialized.
+2025-12-12 02:11:09,247 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:11:09,253 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:11:09,300 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 02:11:09,300 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 02:11:09,301 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:11:09,596 [INFO] cloud.server: Initializing database...
+2025-12-12 02:11:09,598 [INFO] cloud.server: Database initialized.
+2025-12-12 02:11:09,598 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:11:09,605 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:11:09,627 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:11:09,632 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:11:10,216 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:11:10] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:11:10,308 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:11:10] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:11:11,288 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:11:11] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:12:35,378 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:35] "OPTIONS /commands HTTP/1.1" 200 -
+2025-12-12 02:12:35,393 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:35] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-12-12 02:12:35,404 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:35] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:12:38,572 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:12:38,579 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:12:38,579 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:12:38,588 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:12:38,590 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data?start_id=1710&end_id=1729 HTTP/1.1" 200 -
+2025-12-12 02:12:38,601 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:12:38] "GET /data?start_id=1710&end_id=1729 HTTP/1.1" 200 -
+2025-12-12 02:12:45,176 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:12:45] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:12:45,598 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:12:45] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:12:45,690 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:12:45] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:12:48,632 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:12:48] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:13:27,888 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:13:27] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:13:27,894 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:13:27] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:13:31,501 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:13:31] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:13:31,942 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:13:31] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:13:32,031 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:13:32] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:13:33,013 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:13:33] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:13:38,964 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:13:38] "OPTIONS /config HTTP/1.1" 200 -
+2025-12-12 02:13:38,975 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:13:38] "POST /config HTTP/1.1" 200 -
+2025-12-12 02:14:05,835 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:05] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:14:06,274 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:06] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:14:06,367 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:06] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:14:07,351 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:07] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:14:41,962 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:41] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:14:42,402 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:42] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:14:42,494 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:42] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:14:43,473 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:14:43] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:15:03,092 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:15:03,104 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:15:03,105 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:15:03,115 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:15:03,122 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data?start_id=1717&end_id=1736 HTTP/1.1" 200 -
+2025-12-12 02:15:03,131 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:15:03] "GET /data?start_id=1717&end_id=1736 HTTP/1.1" 200 -
+2025-12-12 02:15:22,754 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:15:22] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:15:23,191 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:15:23] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:15:23,280 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:15:23] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:15:24,273 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:15:24] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:16:00,044 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:00] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:00,049 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:00] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:07,809 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:07] "OPTIONS /commands HTTP/1.1" 200 -
+2025-12-12 02:16:07,818 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:07] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-12-12 02:16:07,825 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:07] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:16:10,845 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:10] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:16:11,306 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:11] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:11,380 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:11] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:16:14,480 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:14] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:16:26,787 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:26,793 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:26,797 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:26,802 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:26,814 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:26,820 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:26] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:29,171 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:29] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:29,185 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:29] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:29,197 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:29] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:37,155 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:37] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:37,172 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:37] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:37,184 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:37] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:39,284 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:39] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:39,300 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:39] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:39,313 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:39] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:47,167 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:47] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:47,183 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:47] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:47,197 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:47] "GET /data?start_id=1720&end_id=1739 HTTP/1.1" 200 -
+2025-12-12 02:16:51,659 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:51] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:16:52,098 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:52] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:52,188 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:52] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:16:52,267 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:52] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:52,282 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:52] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:52,297 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:52] "GET /data?start_id=1721&end_id=1740 HTTP/1.1" 200 -
+2025-12-12 02:16:53,173 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:16:53] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:16:55,110 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:55] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:55,115 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:55] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:16:57,098 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:57,107 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:16:57,107 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:57,115 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:16:57,117 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data?start_id=1721&end_id=1740 HTTP/1.1" 200 -
+2025-12-12 02:16:57,128 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:16:57] "GET /data?start_id=1721&end_id=1740 HTTP/1.1" 200 -
+2025-12-12 02:17:00,756 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:17:00] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:17:00,770 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:17:00] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:17:00,782 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:17:00] "GET /data?start_id=1721&end_id=1740 HTTP/1.1" 200 -
+2025-12-12 02:22:21,411 [INFO] cloud.server: Initializing database...
+2025-12-12 02:22:21,413 [INFO] cloud.server: Database initialized.
+2025-12-12 02:22:21,413 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:22:21,419 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:22:21,462 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 02:22:21,463 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 02:22:21,465 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:22:21,761 [INFO] cloud.server: Initializing database...
+2025-12-12 02:22:21,762 [INFO] cloud.server: Database initialized.
+2025-12-12 02:22:21,762 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:22:21,769 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:22:21,794 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:22:21,800 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:22:22,217 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:22:22] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:22:22,254 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:22:22] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:22:23,195 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:22:23] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:24:13,872 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:13] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:24:14,284 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:24:14,373 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:14] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:24:15,357 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:15] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:24:51,575 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:51] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:24:52,012 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:52] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:24:52,105 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:52] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:24:53,086 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:24:53] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:25:01,216 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:01] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:25:01,223 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:01] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:25:02,731 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:02] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:25:02,738 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:02] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:25:10,810 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:10] "OPTIONS /commands HTTP/1.1" 200 -
+2025-12-12 02:25:10,820 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:10] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-12-12 02:25:10,829 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:10] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:25:39,704 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:25:39] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:25:40,132 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:25:40] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:25:40,222 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:25:40] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:25:43,190 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:25:43] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:25:53,668 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:25:53,675 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:25:53,678 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:25:53,688 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:25:53,702 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data?start_id=1727&end_id=1746 HTTP/1.1" 200 -
+2025-12-12 02:25:53,708 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:53] "GET /data?start_id=1727&end_id=1746 HTTP/1.1" 200 -
+2025-12-12 02:25:54,707 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:54] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:25:54,729 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:54] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:25:54,746 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:54] "GET /data?start_id=1727&end_id=1746 HTTP/1.1" 200 -
+2025-12-12 02:25:59,352 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:59] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:25:59,371 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:59] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:25:59,393 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:25:59] "GET /data?start_id=1727&end_id=1746 HTTP/1.1" 200 -
+2025-12-12 02:26:19,615 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:19] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:26:19,630 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:19] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:26:19,646 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:19] "GET /data?start_id=1727&end_id=1746 HTTP/1.1" 200 -
+2025-12-12 02:26:25,108 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:26:25] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:26:25,549 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:26:25] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:26:25,641 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:26:25] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:26:26,694 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:26:26] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:26:36,872 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:36] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:26:36,886 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:36] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:26:36,906 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:26:36] "GET /data?start_id=1729&end_id=1748 HTTP/1.1" 200 -
+2025-12-12 02:31:17,458 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:17] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:31:17,498 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:17] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:31:17,535 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:31:18,049 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:18] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:31:59,879 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:59] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:31:59,916 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:59] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:31:59,948 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:31:59] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:32:00,475 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:32:00] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:32:46,984 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:32:46] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:32:47,011 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:32:47] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:32:47,043 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:32:47] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:32:47,572 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:32:47] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:33:50,113 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:33:50] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:33:50,164 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:33:50] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:33:50,195 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:33:50] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:33:50,723 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:33:50] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:34:32,517 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:34:32] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:34:32,558 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:34:32] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:34:32,590 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:34:32] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:34:33,104 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:34:33] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:36:07,298 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:36:07] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:36:07,304 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:36:07] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:36:12,123 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:36:12] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 02:37:04,015 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:37:04] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:37:04,073 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:37:04] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:37:04,130 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:37:04] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:37:04,661 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:37:04] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:38:01,969 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:01] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 02:38:03,196 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:03] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:38:03,226 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:03] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:38:03,256 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:03] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:38:03,784 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:03] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:38:07,802 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:07] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:38:07,836 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:07] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:38:07,875 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:07] "GET /data?start_id=1729&end_id=1748 HTTP/1.1" 200 -
+2025-12-12 02:38:10,446 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:10] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:38:10,453 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:38:10] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:38:45,627 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:45] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:38:45,651 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:45] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:38:45,681 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:45] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:38:46,235 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:38:46] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:39:32,710 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:39:32] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:39:32,745 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:39:32] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:39:32,774 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:39:32] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:39:33,309 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:39:33] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:40:15,235 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:40:15] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:40:15,255 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:40:15] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:40:15,285 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:40:15] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:40:15,813 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:40:15] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:41:02,974 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:02] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:41:02,995 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:02] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:41:03,028 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:03] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:41:03,557 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:03] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:41:42,182 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:42] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:41:42,218 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:42] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:41:42,248 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:42] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:41:42,779 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:41:42] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:42:28,457 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:42:28] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:42:28,473 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:42:28] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:42:28,503 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:42:28] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:42:29,032 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:42:29] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:42:48,413 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:42:48] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:42:48,418 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:42:48] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:42:50,558 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:42:50] "GET /firmware HTTP/1.1" 200 -
+2025-12-12 02:43:11,119 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:11] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:43:11,154 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:11] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:43:11,182 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:11] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:43:11,718 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:11] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:43:57,734 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:57] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:43:57,811 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:57] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:43:57,849 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:57] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:43:58,385 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:43:58] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:44:40,064 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:44:40] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:44:40,115 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:44:40] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:44:40,151 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:44:40] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:44:40,679 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:44:40] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:45:26,317 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:26] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:45:26,333 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:26] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:45:26,359 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:26] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:45:26,892 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:26] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:45:56,709 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:56] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:45:56,744 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:56] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:45:56,772 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:56] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:45:57,308 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:45:57] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:48:10,378 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:48:10,388 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:48:10,395 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:48:10,404 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data?start_id=1748&end_id=1767 HTTP/1.1" 200 -
+2025-12-12 02:48:10,405 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:48:10,436 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:10] "GET /data?start_id=1748&end_id=1767 HTTP/1.1" 200 -
+2025-12-12 02:48:11,915 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:11] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:48:11,933 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:11] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:48:11,951 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:48:11] "GET /data?start_id=1748&end_id=1767 HTTP/1.1" 200 -
+2025-12-12 02:48:16,033 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:16] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:48:16,331 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:16] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:48:16,428 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:16] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:48:17,406 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:17] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:48:53,829 [INFO] cloud.server: Initializing database...
+2025-12-12 02:48:53,831 [INFO] cloud.server: Database initialized.
+2025-12-12 02:48:53,831 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:48:53,838 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:48:53,886 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 02:48:53,886 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 02:48:53,889 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:48:54,207 [INFO] cloud.server: Initializing database...
+2025-12-12 02:48:54,208 [INFO] cloud.server: Database initialized.
+2025-12-12 02:48:54,209 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:48:54,214 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:48:54,236 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:48:54,241 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:48:55,231 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:55] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:48:55,561 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:55] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:48:55,654 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:55] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:48:56,639 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:48:56] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:49:19,918 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:19] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:49:19,922 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:19] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:49:27,112 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:27] "OPTIONS /commands HTTP/1.1" 200 -
+2025-12-12 02:49:27,121 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:27] "[35m[1mPOST /commands HTTP/1.1[0m" 201 -
+2025-12-12 02:49:27,131 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:27] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:49:42,052 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:49:42] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:49:42,384 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:49:42] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:49:42,475 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:49:42] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:49:45,447 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:49:45] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:49:59,963 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:49:59,970 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:49:59,971 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:49:59,981 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data?start_id=1754&end_id=1773 HTTP/1.1" 200 -
+2025-12-12 02:49:59,982 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:49:59,995 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:49:59] "GET /data?start_id=1754&end_id=1773 HTTP/1.1" 200 -
+2025-12-12 02:50:05,894 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:05] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:50:05,912 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:05] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:50:05,928 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:05] "GET /data?start_id=1754&end_id=1773 HTTP/1.1" 200 -
+2025-12-12 02:50:08,663 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:08] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:50:08,681 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:08] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:50:08,696 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:08] "GET /data?start_id=1754&end_id=1773 HTTP/1.1" 200 -
+2025-12-12 02:50:27,582 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:50:27] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:50:27,917 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:50:27] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:50:28,010 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:50:28] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:50:28,993 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:50:28] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:50:32,257 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:32] "GET /data HTTP/1.1" 200 -
+2025-12-12 02:50:32,273 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:32] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 02:50:32,292 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 02:50:32] "GET /data?start_id=1756&end_id=1775 HTTP/1.1" 200 -
+2025-12-12 02:51:08,350 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:08] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:51:08,696 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:08] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:51:08,785 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:08] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:51:09,766 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:09] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:51:56,469 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:56] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:51:56,845 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:56] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:51:56,893 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:56] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:51:57,872 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:51:57] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:53:16,175 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:53:16] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 02:53:16,480 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:53:16] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:53:16,572 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:53:16] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:53:17,558 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:53:17] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:53:38,167 [INFO] cloud.server: Initializing database...
+2025-12-12 02:53:38,176 [INFO] cloud.server: Database initialized.
+2025-12-12 02:53:38,176 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:53:38,184 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:53:38,240 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 02:53:38,240 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 02:53:38,242 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:53:38,588 [INFO] cloud.server: Initializing database...
+2025-12-12 02:53:38,590 [INFO] cloud.server: Database initialized.
+2025-12-12 02:53:38,590 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:53:38,599 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:53:38,631 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:53:38,638 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:56:21,221 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 02:56:21,289 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:56:21,688 [INFO] cloud.server: Initializing database...
+2025-12-12 02:56:21,689 [INFO] cloud.server: Database initialized.
+2025-12-12 02:56:21,690 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:56:21,707 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:56:21,736 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:56:21,739 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:56:27,827 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 02:56:27,868 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:56:28,202 [INFO] cloud.server: Initializing database...
+2025-12-12 02:56:28,203 [INFO] cloud.server: Database initialized.
+2025-12-12 02:56:28,203 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:56:28,212 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:56:28,234 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:56:28,238 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:57:27,845 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 02:57:27,892 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:57:28,259 [INFO] cloud.server: Initializing database...
+2025-12-12 02:57:28,261 [INFO] cloud.server: Database initialized.
+2025-12-12 02:57:28,261 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:57:28,271 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:57:28,295 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:57:28,299 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:57:33,359 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 02:57:33,415 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:57:33,841 [INFO] cloud.server: Initializing database...
+2025-12-12 02:57:33,842 [INFO] cloud.server: Database initialized.
+2025-12-12 02:57:33,843 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:57:33,855 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:57:33,885 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:57:33,889 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:58:21,313 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 02:58:21,357 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:58:21,698 [INFO] cloud.server: Initializing database...
+2025-12-12 02:58:21,700 [INFO] cloud.server: Database initialized.
+2025-12-12 02:58:21,700 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:58:21,708 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:58:21,736 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:58:21,740 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:58:51,767 [INFO] cloud.server: Initializing database...
+2025-12-12 02:58:51,768 [INFO] cloud.server: Database initialized.
+2025-12-12 02:58:51,768 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:58:51,774 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:58:51,821 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 02:58:51,822 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 02:58:51,823 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 02:58:52,119 [INFO] cloud.server: Initializing database...
+2025-12-12 02:58:52,120 [INFO] cloud.server: Database initialized.
+2025-12-12 02:58:52,120 [INFO] cloud.server: App teardown registered.
+2025-12-12 02:58:52,126 [INFO] cloud.server: Blueprints registered.
+2025-12-12 02:58:52,148 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 02:58:52,152 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 02:59:17,108 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:17] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:59:17,444 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:17] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:59:17,535 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:59:18,515 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:18] "POST /commands HTTP/1.1" 200 -
+2025-12-12 02:59:54,933 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:54] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 02:59:55,280 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:55] "GET /config HTTP/1.1" 200 -
+2025-12-12 02:59:55,389 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:55] "GET /commands HTTP/1.1" 200 -
+2025-12-12 02:59:56,366 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 02:59:56] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:00:43,076 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:00:43] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:00:43,412 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:00:43] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:00:43,518 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:00:43] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:00:44,483 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:00:44] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:01:23,816 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:01:23] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:01:24,155 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:01:24] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:01:24,247 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:01:24] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:01:25,227 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:01:25] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:02:12,135 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:12] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:02:12,466 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:12] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:02:12,556 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:12] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:02:13,543 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:13] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:02:56,664 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:56] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:02:56,994 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:56] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:02:57,088 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:57] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:02:58,069 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:02:58] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:03:37,403 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:03:37] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:03:37,744 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:03:37] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:03:37,834 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:03:37] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:03:38,823 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:03:38] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:04:25,661 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:04:25] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:04:25,989 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:04:25] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:04:26,082 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:04:26] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:04:27,062 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:04:27] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:05:06,305 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:05:06] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:05:06,654 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:05:06] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:05:06,745 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:05:06] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:05:07,724 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:05:07] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:05:49,365 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:05:49] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:06:18,239 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:06:18] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:06:18,650 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:06:18] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:06:18,742 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:06:18] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:06:19,726 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:06:19] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:06:59,466 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:06:59] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:07:28,500 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:07:28] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:07:28,909 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:07:28] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:07:29,005 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:07:29] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:07:29,988 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:07:29] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:08:07,605 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:08:07] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:08:37,278 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:08:37] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:08:37,739 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:08:37] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:08:37,885 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:08:37] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:08:38,778 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:08:38] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:09:16,325 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:09:16] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:09:45,697 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:09:45] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:09:46,105 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:09:46] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:09:46,202 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:09:46] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:09:47,184 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:09:47] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:10:16,625 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 03:10:16,854 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:10:18,040 [INFO] cloud.server: Initializing database...
+2025-12-12 03:10:18,043 [INFO] cloud.server: Database initialized.
+2025-12-12 03:10:18,043 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:10:18,059 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:10:18,093 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:10:18,099 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:10:31,264 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 03:10:31,320 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:10:31,746 [INFO] cloud.server: Initializing database...
+2025-12-12 03:10:31,748 [INFO] cloud.server: Database initialized.
+2025-12-12 03:10:31,748 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:10:31,758 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:10:31,783 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:10:31,787 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:10:34,474 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:10:34] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:10:50,971 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:10:50] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:10:51,406 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:10:51] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:10:51,497 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:10:51] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:10:52,476 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:10:52] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:11:29,401 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:11:29] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:11:29,839 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:11:29] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:11:29,936 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:11:29] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:11:30,911 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:11:30] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:11:44,634 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:11:44] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:12:14,186 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:12:14] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:12:14,595 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:12:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:12:14,690 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:12:14] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:12:15,672 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:12:15] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:12:47,533 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:12:47] "HEAD /firmware HTTP/1.1" 200 -
+2025-12-12 03:13:16,504 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:13:16] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:13:16,912 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:13:16] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:13:17,009 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:13:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:13:17,989 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:13:17] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:14:40,550 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:14:40] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:14:43,363 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:14:43] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:14:43,773 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:14:43] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:14:43,870 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:14:43] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:14:44,844 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:14:44] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:15:57,144 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:15:57] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:15:59,961 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:15:59] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:16:00,360 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:00] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:16:00,457 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:00] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:16:01,439 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:01] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:16:56,069 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:56] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:16:58,356 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:58] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:16:58,765 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:58] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:16:58,857 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:58] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:16:59,838 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:16:59] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:17:34,658 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:17:34] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:17:37,507 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:17:37] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:17:37,916 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:17:37] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:17:38,012 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:17:38] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:17:38,994 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:17:38] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:18:16,044 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:18:16] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:18:18,864 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:18:18] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:18:19,268 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:18:19] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:18:19,363 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:18:19] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:18:20,347 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:18:20] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:19:26,371 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:19:26] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:19:29,182 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:19:29] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:19:29,587 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:19:29] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:19:29,684 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:19:29] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:19:30,667 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:19:30] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:20:38,937 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:20:38] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:20:41,742 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:20:41] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:20:42,151 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:20:42] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:20:42,258 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:20:42] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:20:43,234 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:20:43] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:22:22,497 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:22] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:22:22,507 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:22] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:22:29,311 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:22:29] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:22:32,122 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:22:32] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:22:32,525 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:22:32] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:22:32,624 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:22:32] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:22:33,604 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:22:33] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:22:35,668 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:35] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:22:43,468 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:43] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:22:48,882 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:48] "GET /data HTTP/1.1" 200 -
+2025-12-12 03:22:48,934 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:48] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 03:22:48,976 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:48] "GET /data?start_id=1777&end_id=1796 HTTP/1.1" 200 -
+2025-12-12 03:22:52,905 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:52] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:22:52,912 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:52] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:22:57,189 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:22:57] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:23:02,802 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:23:02] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:23:22,085 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:23:22] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:23:33,496 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:23:33] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:23:36,315 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:23:36] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:23:36,729 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:23:36] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:23:36,809 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:23:36] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:23:37,791 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:23:37] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:24:34,532 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:24:34] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:24:37,312 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:24:37] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:24:37,723 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:24:37] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:24:37,815 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:24:37] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:24:38,796 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:24:38] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:25:37,904 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:25:37] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:25:40,708 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:25:40] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:25:41,116 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:25:41] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:25:41,211 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:25:41] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:25:42,194 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:25:42] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:26:00,427 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:26:00] "[36mGET /firmware HTTP/1.1[0m" 304 -
+2025-12-12 03:26:08,630 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:26:08] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:26:46,049 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:26:46] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:26:48,859 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:26:48] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:26:49,268 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:26:49] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:26:49,360 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:26:49] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:26:50,342 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:26:50] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:27:51,578 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:27:51] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:27:53,931 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:27:53] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:27:54,340 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:27:54] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:27:54,434 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:27:54] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:27:55,415 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:27:55] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:28:29,068 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:28:29] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:28:31,909 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:28:31] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:28:32,317 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:28:32] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:28:32,412 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:28:32] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:28:33,398 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:28:33] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:28:56,247 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\models\\database.py', reloading
+2025-12-12 03:28:56,482 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:28:57,084 [INFO] cloud.server: Initializing database...
+2025-12-12 03:28:57,090 [INFO] cloud.server: Database initialized.
+2025-12-12 03:28:57,091 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:28:57,099 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:28:57,128 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:28:57,142 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:29:01,208 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\models\\database.py', reloading
+2025-12-12 03:29:01,278 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:29:01,691 [INFO] cloud.server: Initializing database...
+2025-12-12 03:29:01,692 [INFO] cloud.server: Database initialized.
+2025-12-12 03:29:01,693 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:29:01,703 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:29:01,732 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:29:01,736 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:29:08,832 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\models\\database.py', reloading
+2025-12-12 03:29:08,893 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:29:09,427 [INFO] cloud.server: Initializing database...
+2025-12-12 03:29:09,429 [INFO] cloud.server: Database initialized.
+2025-12-12 03:29:09,429 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:29:09,441 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:29:09,475 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:29:09,480 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:29:09,573 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:29:09] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:29:15,801 [INFO] cloud.server: Initializing database...
+2025-12-12 03:29:15,803 [INFO] cloud.server: Database initialized.
+2025-12-12 03:29:15,803 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:29:15,809 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:29:15,857 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 03:29:15,858 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 03:29:15,859 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:29:16,243 [INFO] cloud.server: Initializing database...
+2025-12-12 03:29:16,244 [INFO] cloud.server: Database initialized.
+2025-12-12 03:29:16,245 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:29:16,252 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:29:16,276 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:29:16,280 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:29:17,432 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:29:17] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:29:17,527 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:29:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:29:18,523 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:29:18] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:29:45,050 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:29:45] "[31m[1mPOST /firmware HTTP/1.1[0m" 400 -
+2025-12-12 03:30:37,086 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:30:37] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:30:39,905 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:30:39] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:30:40,341 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:30:40] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:30:40,450 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:30:40] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:30:41,427 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:30:41] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:31:15,561 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:15] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:31:17,022 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:17] "[35m[1mPOST /data HTTP/1.1[0m" 201 -
+2025-12-12 03:31:17,435 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:17] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:31:17,534 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:17] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:31:18,512 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:18] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:31:20,876 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:31:20] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:31:48,504 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:31:48] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:31:54,268 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:54] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:31:57,074 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:57] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:31:57,483 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:57] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:31:57,579 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:57] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:31:58,560 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:31:58] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:32:01,039 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:32:01] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:32:57,838 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:32:57] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:33:00,639 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:33:00] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:33:01,050 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:33:01] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:33:01,176 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:33:01] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:33:02,125 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:33:02] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:33:50,808 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:33:50] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:34:00,290 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:34:00] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:34:03,093 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:34:03] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:34:03,495 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:34:03] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:34:03,596 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:34:03] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:34:04,572 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:34:04] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:34:26,743 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:34:26] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:34:36,066 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:34:36] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:34:39,352 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:34:39] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:34:42,510 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:34:42] "[35m[1mPOST /firmware HTTP/1.1[0m" 201 -
+2025-12-12 03:35:01,062 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:35:01] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:35:03,874 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:35:03] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:35:04,293 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:35:04] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:35:04,375 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:35:04] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:35:05,356 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:35:05] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:36:02,465 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:36:02] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:36:05,278 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:36:05] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:36:05,683 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:36:05] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:36:05,778 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:36:05] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:36:06,757 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:36:06] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:37:04,246 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:37:04] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:37:04,403 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:37:04] "[33mGET /firmware/version HTTP/1.1[0m" 404 -
+2025-12-12 03:37:07,067 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:37:07] "[31m[1mPOST /data HTTP/1.1[0m" 400 -
+2025-12-12 03:37:07,476 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:37:07] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:37:07,566 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:37:07] "GET /commands HTTP/1.1" 200 -
+2025-12-12 03:37:08,550 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:37:08] "POST /commands HTTP/1.1" 200 -
+2025-12-12 03:37:26,643 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 03:37:26,811 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:37:27,244 [INFO] cloud.server: Initializing database...
+2025-12-12 03:37:27,246 [INFO] cloud.server: Database initialized.
+2025-12-12 03:37:27,247 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:37:27,257 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:37:27,293 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:37:27,305 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:37:33,037 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:37:33] "GET /firmware/version HTTP/1.1" 200 -
+2025-12-12 03:38:03,429 [INFO] cloud.server: Initializing database...
+2025-12-12 03:38:03,431 [INFO] cloud.server: Database initialized.
+2025-12-12 03:38:03,431 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:38:03,437 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:38:03,483 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.8.178:5000
+2025-12-12 03:38:03,483 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 03:38:03,486 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:38:03,814 [INFO] cloud.server: Initializing database...
+2025-12-12 03:38:03,816 [INFO] cloud.server: Database initialized.
+2025-12-12 03:38:03,816 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:38:03,822 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:38:03,847 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:38:03,851 [INFO] werkzeug:  * Debugger PIN: 905-442-242
+2025-12-12 03:38:06,272 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:38:06] "GET /firmware/version HTTP/1.1" 200 -
+2025-12-12 03:38:07,606 [INFO] werkzeug: 192.168.137.146 - - [12/Dec/2025 03:38:07] "GET /firmware HTTP/1.0" 200 -
+2025-12-12 03:38:12,094 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:38:12] "GET /data HTTP/1.1" 200 -
+2025-12-12 03:38:12,171 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:38:12] "GET /data/count HTTP/1.1" 200 -
+2025-12-12 03:38:12,253 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:38:12] "GET /data?start_id=1782&end_id=1801 HTTP/1.1" 200 -
+2025-12-12 03:38:14,597 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:38:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:38:14,603 [INFO] werkzeug: 127.0.0.1 - - [12/Dec/2025 03:38:14] "GET /config HTTP/1.1" 200 -
+2025-12-12 03:38:38,257 [INFO] werkzeug:  * Detected change in 'E:\\UoM\\Sem07\\Embedded\\Repo\\Embedded-Systems-Engineering-EN4440\\cloud\\app\\routes\\firmware.py', reloading
+2025-12-12 03:38:38,310 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 03:38:38,697 [INFO] cloud.server: Initializing database...
+2025-12-12 03:38:38,698 [INFO] cloud.server: Database initialized.
+2025-12-12 03:38:38,698 [INFO] cloud.server: App teardown registered.
+2025-12-12 03:38:38,707 [INFO] cloud.server: Blueprints registered.
+2025-12-12 03:38:38,733 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 03:38:38,737 [INFO] werkzeug:  * Debugger PIN: 905-442-242
