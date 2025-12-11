@@ -10,15 +10,11 @@
 #include "cloudClient.h"
 #include "security_layer.h"
 #include "update_config.h"
-<<<<<<< HEAD
+#include "power_estimator.h"
 #include "request_sim.h"
 #include "protocol_adapter.h"
 #include "inverterSIM_utils.h"
 #include "frame_queue.h"
-=======
-#include "power_estimator.h"
-
->>>>>>> 48d2d0f5ec16b506dc6f234a2839defb3ef763d1
 
 // ⚙️ Local namespace variables
 namespace {
@@ -64,9 +60,16 @@ namespace UploadManager {
 
         int httpCode = http.POST((uint8_t*)data.data(), data.size());
 
+        // Capture response payload (if any) for diagnostics
+        String httpBody = http.getString();
+
         if (httpCode > 0) {
             DEBUG_PRINTF("[UploadManager] 🌐 Upload response: %d\n", httpCode);
-            if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_ACCEPTED) {
+            if (httpBody.length()) {
+                DEBUG_PRINTF("[UploadManager] ↩️ Response body: %s\n", httpBody.c_str());
+            }
+            // Treat any 2xx as success (includes 201 Created)
+            if (httpCode >= 200 && httpCode < 300) {
                 DEBUG_PRINTLN("[UploadManager] ✅ Upload successful.");
                 http.end();
                 return true;
@@ -95,7 +98,6 @@ namespace UploadManager {
         // std::vector<uint8_t> encrypted = encryptBuffer(compressed);
         // std::vector<uint8_t> decrypted = decryptBuffer(encrypted);
             // 2️⃣ Encrypt (returns a new vector)
-            const uint8_t key = 0x5A;
             // auto encrypted = encryptBuffer(compressed, key);
            // ===== Power Estimator: measure encryption time =====
             unsigned long __t0 = micros();
@@ -126,10 +128,6 @@ namespace UploadManager {
             } else {
                 DEBUG_PRINTLN("[UploadManager] ❌ Upload failed → buffer NOT cleared");
             }
-
-
-        UploadManager::uploadtoCloud(encrypted);
-
         // 🔹 Fetch configuration and command data
         String config_response = cloud.fetch(target.fetchConfigEndpoint.c_str());
         String command_response = cloud.fetch(target.fetchCommandEndpoint.c_str());
@@ -213,7 +211,7 @@ namespace UploadManager {
                 }
 
                 // 🔹 Decode into Modbus frames
-                const auto& frames = ProtocolAdapter::decodeRequestStruct(cloudRequestSim);
+                ProtocolAdapter::decodeRequestStruct(cloudRequestSim);
             }
 
             // ================================================================

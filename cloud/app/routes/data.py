@@ -8,7 +8,7 @@ from app.models.database import (
     get_data_by_timestamp_range,
     get_data_count
 )
-from app.utils.compressor import process_compressed_data
+from app.utils.compressor import process_compressed_data, reset_sequence_counter
 
 @data_bp.route('/data', methods=['POST'])
 def receive_data():
@@ -46,6 +46,14 @@ def receive_data():
             # key parameter is optional: if provided, uses legacy XOR decryption
             # if omitted (None), uses new authenticated encryption
             key = request.args.get('key', default=None, type=int)
+            reset_seq = request.args.get('reset_seq', default='false').lower() == 'true'
+            
+            # Reset sequence counter if requested (use when device restarts)
+            if reset_seq:
+                reset_sequence_counter()
+                print("[Data Route] Sequence counter reset")
+            
+            print(f"[Data Route] Received {len(raw_bytes)} bytes, regs={regs}")
             
             # Process compressed data (decrypt + decompress + decode)
             snapshots = process_compressed_data(raw_bytes, regs, key)
@@ -53,7 +61,9 @@ def receive_data():
             if not snapshots:
                 return jsonify({
                     'status': 'error',
-                    'message': 'Failed to decompress/decode data'
+                    'message': 'Failed to decompress/decode data (likely decryption failure or replay attack)',
+                    'packet_size': len(raw_bytes),
+                    'hint': 'If device restarted, use ?reset_seq=true'
                 }), 400
             
             # Insert all snapshots to database
