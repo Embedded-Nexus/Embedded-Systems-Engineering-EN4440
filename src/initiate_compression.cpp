@@ -6,6 +6,7 @@
 #include "cloud_decode_utils.h"
 #include <Arduino.h>
 #include <vector>
+#include "power_estimator.h"
 
 std::vector<uint8_t> initiateCompression() {
     const auto& currentBuffer = Buffer::getAll();
@@ -47,6 +48,11 @@ std::vector<uint8_t> initiateCompression() {
 
     // 🔹 Compress and benchmark
     auto result = Compression::TimeSeriesCompressor::benchmark(rawValues, REGISTER_COUNT + 6);
+    
+    // ===== Power Estimator: add compression CPU time =====
+    pe_addCpuMs(result.tCompressUs / 1000UL);
+
+
     std::vector<uint8_t> compressed = Compression::TimeSeriesCompressor::compress(rawValues, REGISTER_COUNT + 6);
 
     Serial.printf("[DEBUG] Compressed bytes:\n");
@@ -75,9 +81,7 @@ std::vector<uint8_t> initiateCompression() {
     DEBUG_PRINTF("  CPU Time        : %lu µs\n", result.tCompressUs);
     DEBUG_PRINTF("  Lossless Verify : %s\n", result.lossless ? "✅ YES" : "❌ NO");
 
-    // ✅ Clear buffer after successful processing
-    Buffer::clear();
-    DEBUG_PRINTLN("[Buffer] 🧹 Main buffer cleared after compression.\n");
+   
 
     return compressed;
 }

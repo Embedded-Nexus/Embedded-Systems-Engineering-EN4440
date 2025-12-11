@@ -10,10 +10,15 @@
 #include "cloudClient.h"
 #include "security_layer.h"
 #include "update_config.h"
+<<<<<<< HEAD
 #include "request_sim.h"
 #include "protocol_adapter.h"
 #include "inverterSIM_utils.h"
 #include "frame_queue.h"
+=======
+#include "power_estimator.h"
+
+>>>>>>> 48d2d0f5ec16b506dc6f234a2839defb3ef763d1
 
 // ⚙️ Local namespace variables
 namespace {
@@ -86,17 +91,42 @@ namespace UploadManager {
         DEBUG_PRINTLN("[UploadManager] ⏫ Upload check triggered.");
 
         // ☁️ Upload compressed + encrypted payload
-        auto compressed = initiateCompression();
-        std::vector<uint8_t> encrypted = encryptBuffer(compressed);
-        std::vector<uint8_t> decrypted = decryptBuffer(encrypted);
+           auto compressed = initiateCompression();
+        // std::vector<uint8_t> encrypted = encryptBuffer(compressed);
+        // std::vector<uint8_t> decrypted = decryptBuffer(encrypted);
+            // 2️⃣ Encrypt (returns a new vector)
+            const uint8_t key = 0x5A;
+            // auto encrypted = encryptBuffer(compressed, key);
+           // ===== Power Estimator: measure encryption time =====
+            unsigned long __t0 = micros();
+            vector<uint8_t> encrypted = encryptBuffer(compressed);
+            unsigned long __t1 = micros();
+            pe_addCpuMs((__t1 - __t0) / 1000UL);
+
+            // ===== Power Estimator: measure decryption time =====
+            unsigned long __t2 = micros();
+            vector<uint8_t> decrypted = decryptBuffer(encrypted);
+            unsigned long __t3 = micros();
+            pe_addCpuMs((__t3 - __t2) / 1000UL);
 
         Serial.println("Encrypted:");
         for (auto b : encrypted) Serial.printf("%02X", b);
         Serial.println();
 
-        Serial.println("Decrypted:");
-        for (auto b : decrypted) Serial.printf("%02X", b);
-        Serial.println();
+            Serial.println("Decrypted:");
+            for (auto b : decrypted) { Serial.printf("%02X", b); }
+            Serial.println();
+            
+            // Upload compressed+encrypted data
+            bool ok = UploadManager::uploadtoCloud(encrypted);
+
+            if (ok) {
+                DEBUG_PRINTLN("[UploadManager] ✅ Upload successful → clearing buffer");
+                Buffer::clear();
+            } else {
+                DEBUG_PRINTLN("[UploadManager] ❌ Upload failed → buffer NOT cleared");
+            }
+
 
         UploadManager::uploadtoCloud(encrypted);
 
