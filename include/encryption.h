@@ -2,15 +2,9 @@
 #define ENCRYPTION_H
 
 #include <Arduino.h>
+#include <vector>
 
-namespace Encryption {
-
-    // Encrypt string with XOR
-    String encrypt(const String& input, const String& key);
-
-    // Decrypt (same function, symmetric)
-    String decrypt(const String& input, const String& key);
-
-}  // namespace Encryption
+// Returns a new encrypted copy of the data
+std::vector<uint8_t> encryptBuffer(const std::vector<uint8_t>& data, uint8_t key);
 
 #endif

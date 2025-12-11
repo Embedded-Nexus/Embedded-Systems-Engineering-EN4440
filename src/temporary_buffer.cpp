@@ -1,30 +1,28 @@
 #include "temporary_buffer.h"
+#include "debug_utils.h"
 
 namespace TemporaryBuffer {
 
-    // Global buffer storage
-    vector<DecodedRegisters> buffer;
+    vector<TimedSnapshot> buffer;
 
-    void update(const vector<DecodedRegisters>& newData) {
-        for (const auto& newReg : newData) {
-            // Check if this register already exists in the buffer
-            auto it = find_if(buffer.begin(), buffer.end(),
-                              [&](const DecodedRegisters& r) { return r.index == newReg.index; });
+    void update(const TimedSnapshot& newSnapshot) {
+        // If you only want to keep the latest one, clear first:
+        buffer.clear();
 
-            if (it != buffer.end()) {
-                *it = newReg;  // Replace existing value
-            } else {
-                buffer.push_back(newReg);  // Insert new entry
-            }
-        }
+        // Then push the new snapshot
+        buffer.push_back(newSnapshot);
+
+        DEBUG_PRINTF("[TempBuffer] 📥 Updated with snapshot at %s (size=%d)\n",
+                     newSnapshot.timestamp.c_str(), (int)newSnapshot.values.size());
     }
 
-    const vector<DecodedRegisters>& getAll() {
+    const vector<TimedSnapshot>& getAll() {
         return buffer;
     }
 
     void clear() {
         buffer.clear();
+        DEBUG_PRINTLN("[TempBuffer] 🧹 Cleared temporary buffer.");
     }
 
 }  // namespace TemporaryBuffer
