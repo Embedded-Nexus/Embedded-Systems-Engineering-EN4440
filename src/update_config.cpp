@@ -24,7 +24,7 @@ namespace UpdateConfig {
 
                 int idx = 0;
                 int lastPos = 0;
-                while (idx < NUM_REGISTERS && lastPos < arrayStr.length()) {
+                while (idx < NUM_REGISTERS && (unsigned int)lastPos < arrayStr.length()) {
                     int comma = arrayStr.indexOf(',', lastPos);
                     String token = (comma == -1)
                         ? arrayStr.substring(lastPos)

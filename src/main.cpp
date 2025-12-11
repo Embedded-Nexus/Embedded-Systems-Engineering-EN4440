@@ -79,7 +79,7 @@ void setup() {
 
     // 🕒 Initialize polling (every 10 seconds)
     PollingManager::begin(pollingInterval);
-    UploadManager::begin("http://10.10.30.2:5000/data","http://10.10.30.2:5000/config","http://10.10.30.2:5000/commands");
+    UploadManager::begin("http://192.168.137.1:5000/data","http://192.168.137.1:5000/config","http://192.168.137.1:5000/commands");
 
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");

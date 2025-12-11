@@ -32,7 +32,7 @@
 #define DEBUG_PRINTF(fmt, ...)                       \
     do {                                             \
         char _buf[200];                              \
-        snprintf(_buf, sizeof(_buf), fmt, __VA_ARGS__); \
+        snprintf(_buf, sizeof(_buf), fmt, ##__VA_ARGS__); \
         _DEBUG_SERIAL_PRINT(_buf);                   \
         LogBuffer::add(String(_buf));                \
     } while(0)
