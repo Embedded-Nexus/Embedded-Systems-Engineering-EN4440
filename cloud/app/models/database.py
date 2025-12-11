@@ -227,6 +227,37 @@ def insert_data(timestamp, data):
     db.commit()
     return cursor.lastrowid
 
+def insert_data_batch(snapshots):
+    """
+    Insert multiple sensor data snapshots in batch
+    
+    Args:
+        snapshots: List of dicts with 'timestamp' and 'registers' (list of 10 values)
+        
+    Returns:
+        Number of records inserted
+    """
+    db = get_db()
+    cursor = db.cursor()
+    
+    records = []
+    for snapshot in snapshots:
+        timestamp = snapshot['timestamp']
+        data = snapshot['registers']
+        
+        # Convert -1 to NULL for unreaded registers
+        reg_values = [None if val == -1 else val for val in data]
+        records.append((timestamp, *reg_values))
+    
+    cursor.executemany('''
+        INSERT INTO sensor_data 
+        (timestamp, reg_0, reg_1, reg_2, reg_3, reg_4, reg_5, reg_6, reg_7, reg_8, reg_9)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', records)
+    
+    db.commit()
+    return len(records)
+
 def get_latest_data():
     """Get the latest value for each register"""
     db = get_db()

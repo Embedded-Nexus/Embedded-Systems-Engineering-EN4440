@@ -6,6 +6,7 @@
 #include "inverter_comm.h"
 #include "debug_utils.h"
 #include "request_sim.h"
+#include "frame_queue.h"
 
 namespace {
     unsigned long lastPollTime = 0;
@@ -32,17 +33,34 @@ namespace PollingManager {
             DEBUG_PRINTLN("\n================ POLLING CYCLE START =================");
 
             // Build Modbus request
+
+
            // Use the global instance defined in request_sim.cpp
             const auto& frames = ProtocolAdapter::decodeRequestStruct(requestSim);
 
+            // Debug: print current frame queue
+            DEBUG_PRINTF("[UploadManager] 🧾 FrameQueue contains command %zu frames:\n", frameQueue.size());
+            for (size_t i = 0; i < frameQueue.size(); ++i) {
+                const auto& frame = frameQueue[i];
+                DEBUG_PRINTF("   [%zu] Frame length: %zu bytes\n", i, frame.size());
+                DEBUG_PRINTF("   Data: ");
+                for (uint8_t byte : frame) {
+                    DEBUG_PRINTF("%02X ", byte);  // Print each byte in hex
+                }
+                DEBUG_PRINTF("\n");
+            }
+
             // Simulate sending & receiving
             InverterSim::processFrameQueue(frames);
+            
+            frameQueue.clear();
+
 
             // Append filtered data to buffer
             Buffer::appendFromTemporary(requestSim);
 
             // printGlobalRequestSim();
-
+            
 
             // 🔍 Print main buffer contents
             const auto& allSnapshots = Buffer::getAll();

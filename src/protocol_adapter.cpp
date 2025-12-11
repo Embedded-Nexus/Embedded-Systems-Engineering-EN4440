@@ -1,9 +1,8 @@
 #include "protocol_adapter.h"
+#include "frame_queue.h"
+#include "debug_utils.h"
 
 namespace ProtocolAdapter {
-
-    // Global frame queue
-    static vector<vector<uint8_t>> frameQueue;
 
     // CRC16 (Modbus standard)
     uint16_t modbusCRC(uint8_t *buf, int len) {
@@ -58,7 +57,6 @@ namespace ProtocolAdapter {
     // Decode struct → Build & Queue frames
     const vector<vector<uint8_t>>& decodeRequestStruct(const RequestSIM &input) {
         const uint8_t slaveAddr = 0x01;
-        frameQueue.clear();
 
         Serial.println("[ProtocolAdapter] Decoding RequestSIM...");
 
@@ -73,6 +71,15 @@ namespace ProtocolAdapter {
         }
 
         // Handle READ requests
+        for (int i = 0; i < NUM_REGISTERS; i++) {
+            if (input.read[i]) {
+            // Handle READ requests
+            vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, 0, 10);
+            frameQueue.push_back(frame);
+            }
+        }
+
+        // Handle READ requests
         // for (int i = 0; i < NUM_REGISTERS; i++) {
         //     if (input.read[i]) {
         //         vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, i, 1);
@@ -80,10 +87,6 @@ namespace ProtocolAdapter {
         //         Serial.printf("[READ]  Queued R%d\n", i);
         //     }
         // }
-
-        // Handle READ requests
-        vector<uint8_t> frame = BuildRequestFrame(slaveAddr, 0x03, 0, 10);
-        frameQueue.push_back(frame);
 
         Serial.printf("[ProtocolAdapter] Total frames queued: %d\n", (int)frameQueue.size());
         return frameQueue;

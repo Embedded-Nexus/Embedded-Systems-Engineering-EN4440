@@ -1,57 +1,105 @@
 from flask import jsonify, request
 from app.routes import data_bp
 from app.models.database import (
-    insert_data, 
+    insert_data,
+    insert_data_batch,
     get_latest_data, 
     get_data_by_id_range, 
     get_data_by_timestamp_range,
     get_data_count
 )
+from app.utils.compressor import process_compressed_data
 
 @data_bp.route('/data', methods=['POST'])
 def receive_data():
     """
     POST /data
     Receives data from the embedded device
-    Expected JSON body:
+    
+    Supports two formats:
+    
+    1. JSON format (legacy):
     {
         "timestamp": "2025-10-18T12:00:00",
         "data": [100, 200, -1, 150, -1, 300, 250, -1, 180, 220]
     }
+    
+    2. Binary format (compressed):
+    Content-Type: application/octet-stream
+    Raw compressed bytes (TimeSeriesCompressor format)
     """
     try:
-        payload = request.get_json()
-        
-        if not payload:
+        # Check if request contains binary data (compressed)
+        if request.content_type == 'application/octet-stream' or \
+           (request.data and not request.is_json):
+            # Read raw bytes
+            raw_bytes = request.data
+            
+            if not raw_bytes:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'No binary data provided'
+                }), 400
+            
+            # Get number of registers and optional key from query parameters
+            regs = request.args.get('regs', default=10, type=int)
+            # key parameter is optional: if provided, uses legacy XOR decryption
+            # if omitted (None), uses new authenticated encryption
+            key = request.args.get('key', default=None, type=int)
+            
+            # Process compressed data (decrypt + decompress + decode)
+            snapshots = process_compressed_data(raw_bytes, regs, key)
+            
+            if not snapshots:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Failed to decompress/decode data'
+                }), 400
+            
+            # Insert all snapshots to database
+            count = insert_data_batch(snapshots)
+            
             return jsonify({
-                'status': 'error',
-                'message': 'No data provided'
-            }), 400
+                'status': 'success',
+                'message': f'Compressed data received and processed successfully',
+                'snapshots_count': count,
+                'snapshots': snapshots
+            }), 201
         
-        timestamp = payload.get('timestamp')
-        data = payload.get('data')
-        
-        # Validate inputs
-        if not timestamp:
+        # Otherwise, handle JSON format (legacy)
+        else:
+            payload = request.get_json()
+            
+            if not payload:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'No data provided'
+                }), 400
+            
+            timestamp = payload.get('timestamp')
+            data = payload.get('data')
+            
+            # Validate inputs
+            if not timestamp:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'timestamp is required'
+                }), 400
+            
+            if not data or not isinstance(data, list) or len(data) != 10:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'data must be a list of 10 elements'
+                }), 400
+            
+            # Insert data
+            record_id = insert_data(timestamp, data)
+            
             return jsonify({
-                'status': 'error',
-                'message': 'timestamp is required'
-            }), 400
-        
-        if not data or not isinstance(data, list) or len(data) != 10:
-            return jsonify({
-                'status': 'error',
-                'message': 'data must be a list of 10 elements'
-            }), 400
-        
-        # Insert data
-        record_id = insert_data(timestamp, data)
-        
-        return jsonify({
-            'status': 'success',
-            'message': 'Data received successfully',
-            'id': record_id
-        }), 201
+                'status': 'success',
+                'message': 'Data received successfully',
+                'id': record_id
+            }), 201
         
     except Exception as e:
         return jsonify({
