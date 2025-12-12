@@ -7,6 +7,7 @@
 #include "request_config.h"
 #include "polling_manager.h"
 #include "upload_manager.h"
+#include "firmware_rollback.h"
 #include "request_sim.h"
 #include "power_estimator.h"
 
@@ -74,6 +75,16 @@ void setup() {
 
     DEBUG_PRINTLN("=== Debug Mode Active ===");
 
+    // 🔄 FIRMWARE ROLLBACK: Check if previous update failed and trigger rollback if needed
+    // MUST be called before any other initialization
+    bool rollbackTriggered = FirmwareRollback::initializeAndDetectRollback();
+    
+    if (rollbackTriggered) {
+        DEBUG_PRINTLN("[System] ⚠️  Rollback detected - device will restart with previous firmware");
+        delay(2000);
+        ESP.restart();  // Restart to boot from previous OTA slot
+    }
+
     //Create the Configuration(default)
     requestSim = RequestConfig::buildRequestConfig();
     // 🌐 Connect to Wi-Fi and get real-world time
@@ -84,7 +95,7 @@ void setup() {
     UploadManager::begin("http://192.168.137.1:5000/data","http://192.168.137.1:5000/config","http://192.168.137.1:5000/commands");
     
     // 🔄 Initialize firmware updater (version checked at each upload cycle)
-    UploadManager::initializeFirmwareUpdater("http://192.168.137.1:5000/firmware", "1.0.4");
+    UploadManager::initializeFirmwareUpdater("http://192.168.137.1:5000/firmware", "1.0.5");
 
     DEBUG_PRINTLN("[System] ✅ Setup complete.");
     pe_begin(5000); // report every 5000 ms

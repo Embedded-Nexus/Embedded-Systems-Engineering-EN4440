@@ -1,4 +1,5 @@
 #include "firmware_updater.h"
+#include "firmware_rollback.h"
 #include <ESP8266WiFi.h>
 
 namespace FirmwareUpdater {
@@ -238,6 +239,9 @@ namespace FirmwareUpdater {
         DEBUG_PRINTLN("╚════════════════════════════════════════════════════════════╝");
         DEBUG_PRINTLN("[FirmwareUpdater] 📥 Downloading firmware from server...\n");
 
+        // Mark rollback state BEFORE starting OTA
+        FirmwareRollback::markUpdateInProgress(serverVersion);
+
         WiFiClient client;
 
         // Configure httpUpdate to not reboot automatically (we'll handle it)
@@ -251,12 +255,20 @@ namespace FirmwareUpdater {
                 DEBUG_PRINTF("[FirmwareUpdater] ❌ Firmware update failed! Error: %s\n", 
                             ESPhttpUpdate.getLastErrorString().c_str());
                 DEBUG_PRINTF("[FirmwareUpdater] Error code: %d\n", ESPhttpUpdate.getLastError());
+                
+                // Mark update as failed (preserves rollback state)
+                FirmwareRollback::markUpdateFailed(ESPhttpUpdate.getLastErrorString());
+                
                 isChecking = false;
                 return false;
 
             case HTTP_UPDATE_NO_UPDATES:
                 // This shouldn't happen since we already checked version
                 DEBUG_PRINTLN("[FirmwareUpdater] ℹ️ Server returned no updates");
+                
+                // Mark as failed (no binary received)
+                FirmwareRollback::markUpdateFailed("Server returned no updates");
+                
                 isChecking = false;
                 return false;
 
@@ -269,6 +281,9 @@ namespace FirmwareUpdater {
                 DEBUG_PRINTF("[FirmwareUpdater] 📊 Version Updated:\n");
                 DEBUG_PRINTF("[FirmwareUpdater]    OLD: %s\n", currentVersion.c_str());
                 DEBUG_PRINTF("[FirmwareUpdater]    NEW: %s\n", serverVersion.c_str());
+                
+                // Mark update as successful (allows next boot to complete)
+                FirmwareRollback::markUpdateSuccess(serverVersion);
                 DEBUG_PRINTF("[FirmwareUpdater] 💾 New version installed on chip\n");
                 
                 // Update current version to new version
