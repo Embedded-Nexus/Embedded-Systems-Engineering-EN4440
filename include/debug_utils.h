@@ -2,19 +2,16 @@
 #define DEBUG_UTILS_H
 
 #include <Arduino.h>
-#include "log_buffer.h"   // <-- ADD THIS
+#include "log_buffer.h"
 
 // Turn debugging on/off here
-#define DEBUG_ENABLED true
-
-// Simple flag to prevent concurrent Serial access (not true mutex, but helps)
-extern bool _serial_busy;
+#define DEBUG_ENABLED false
 
 #if DEBUG_ENABLED
 
 // ----------- PRINT WITHOUT TIMESTAMP (Serial only) -----------
-#define _DEBUG_SERIAL_PRINT(x)    do { while(_serial_busy) yield(); _serial_busy = true; Serial.print(x); _serial_busy = false; } while(0)
-#define _DEBUG_SERIAL_PRINTLN(x)  do { while(_serial_busy) yield(); _serial_busy = true; Serial.println(x); _serial_busy = false; } while(0)
+#define _DEBUG_SERIAL_PRINT(x)    Serial.print(x)
+#define _DEBUG_SERIAL_PRINTLN(x)  Serial.println(x)
 
 // ----------- MAIN LOGGING WRAPPERS (Serial + RAM buffer) -----------
 

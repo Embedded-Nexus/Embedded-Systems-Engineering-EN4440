@@ -8,7 +8,7 @@ struct LogEntry {
 };
 
 namespace LogBuffer {
-    static const int MAX_LOGS = 100;
+    static const int MAX_LOGS = 10;
     extern LogEntry logs[MAX_LOGS];
     extern int index;
 
