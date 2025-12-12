@@ -112,7 +112,7 @@ void loop() {
 
     if (now - lastLogTime >= 60000) {   // 60 seconds
         lastLogTime = now;
-        printErrorLogs();
+        //printErrorLogs();
     }
 
     unsigned long elapsed = millis() - cycleStart;

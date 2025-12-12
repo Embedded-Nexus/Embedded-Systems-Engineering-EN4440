@@ -99,7 +99,5 @@ std::vector<uint8_t> initiateCompression() {
     DEBUG_PRINTF("  CPU Time        : %lu µs\n", result.tCompressUs);
     DEBUG_PRINTF("  Lossless Verify : %s\n", result.lossless ? "✅ YES" : "❌ NO");
 
-   
-
     return compressed;
 }
