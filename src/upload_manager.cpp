@@ -15,6 +15,7 @@
 #include "protocol_adapter.h"
 #include "inverterSIM_utils.h"
 #include "frame_queue.h"
+#include "firmware_updater.h"
 
 // ⚙️ Local namespace variables
 namespace {
@@ -34,6 +35,11 @@ namespace UploadManager {
         target.fetchConfigEndpoint = urlConfig;
         target.fetchCommandEndpoint = urlCommand;
         DEBUG_PRINTF("[UploadManager] Initialized with endpoint: %s\n", url.c_str());
+    }
+
+    // Initialize firmware updater with endpoint and version
+    void initializeFirmwareUpdater(const String& firmwareEndpoint, const String& firmwareVersion) {
+        FirmwareUpdater::begin(firmwareEndpoint, firmwareVersion);
     }
 
     // 📤 Upload binary data to cloud
@@ -103,6 +109,9 @@ namespace UploadManager {
         }
 
         DEBUG_PRINTLN("[UploadManager] ⏫ Upload check triggered.");
+
+        // 🔄 Check for firmware updates at start of each upload cycle
+        FirmwareUpdater::handle();
 
         // ☁️ Upload compressed + encrypted payload
            auto compressed = initiateCompression();
