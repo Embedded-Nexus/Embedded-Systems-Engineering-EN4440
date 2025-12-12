@@ -2087,3 +2087,19 @@
 2025-12-12 12:50:41,906 [INFO] werkzeug: 192.168.137.38 - - [12/Dec/2025 12:50:41] "GET /config HTTP/1.1" 200 -
 2025-12-12 12:50:42,004 [INFO] werkzeug: 192.168.137.38 - - [12/Dec/2025 12:50:42] "GET /commands HTTP/1.1" 200 -
 2025-12-12 12:50:43,006 [INFO] werkzeug: 192.168.137.38 - - [12/Dec/2025 12:50:43] "POST /commands HTTP/1.1" 200 -
+2025-12-12 13:10:14,536 [INFO] cloud.server: Initializing database...
+2025-12-12 13:10:14,540 [INFO] cloud.server: Database initialized.
+2025-12-12 13:10:14,540 [INFO] cloud.server: App teardown registered.
+2025-12-12 13:10:14,552 [INFO] cloud.server: Blueprints registered.
+2025-12-12 13:10:14,601 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.10.30.2:5000
+2025-12-12 13:10:14,602 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-12 13:10:14,603 [INFO] werkzeug:  * Restarting with stat
+2025-12-12 13:10:14,998 [INFO] cloud.server: Initializing database...
+2025-12-12 13:10:15,000 [INFO] cloud.server: Database initialized.
+2025-12-12 13:10:15,000 [INFO] cloud.server: App teardown registered.
+2025-12-12 13:10:15,011 [INFO] cloud.server: Blueprints registered.
+2025-12-12 13:10:15,044 [WARNING] werkzeug:  * Debugger is active!
+2025-12-12 13:10:15,053 [INFO] werkzeug:  * Debugger PIN: 905-442-242
