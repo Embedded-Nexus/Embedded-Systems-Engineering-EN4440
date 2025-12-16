@@ -563,5 +563,322 @@ The design is optimized for embedded deployment:
 
 ---
 
+# Milestone 4 – Remote Configuration, Security Layer & FOTA
+
+**EcoWatt Embedded Device (ESP8266)**
+
+---
+
+## 1. Objective
+
+Milestone 4 enables **secure, remotely managed operation** of the EcoWatt Device.
+The system now supports:
+
+* Runtime remote configuration without reboot
+* Cloud-driven command execution via Inverter SIM
+* Lightweight MCU-friendly security (auth, integrity, confidentiality, anti-replay)
+* Secure firmware-over-the-air (FOTA) with rollback protection
+
+---
+
+## 2. Complete Runtime Architecture
+
+```
+EcoWatt Cloud
+ ├─ /data        (uplink payloads)
+ ├─ /config      (runtime configuration)
+ ├─ /commands    (queued commands)
+ ├─ /firmware    (FOTA images)
+ ├─ Logs & Audit
+ |
+ |  Secure JSON / Binary Payloads
+ v
+EcoWatt Device
+ ├─ PollingManager
+ ├─ ProtocolAdapter + FrameQueue
+ ├─ Inverter SIM Interface
+ ├─ TemporaryBuffer → Main Buffer
+ ├─ Compression
+ ├─ Security Layer (Encrypt + MAC + Anti-Replay)
+ ├─ UploadManager
+ ├─ Runtime Config Manager
+ ├─ FirmwareUpdater + Rollback
+ |
+ v
+Inverter SIM
+```
+
+---
+
+## 3. Part 1 – Remote Configuration 
+
+### 3.1 Supported Runtime Parameters
+
+The EcoWatt Device supports **cloud-driven runtime updates** for:
+
+* Polling interval
+* Register read enable/disable bitmap
+* Firmware version metadata
+* Command enablement behavior
+
+Configurations are fetched from the cloud **during the upload cycle**, not asynchronously, ensuring safe application boundaries.
+
+---
+
+### 3.2 Runtime Application (No Reboot)
+
+Configuration updates:
+
+* Are validated on receipt
+* Are applied **after the next upload window**
+* Do not interrupt polling, buffering, or command execution
+* Do not require reboot or reflashing
+
+This is implemented via:
+
+* Global `RequestSIM` structure
+* Deferred application in `UploadManager::handle()`
+* Non-blocking update logic
+
+---
+
+### 3.3 Validation, Idempotency & Error Handling
+
+* Invalid or unsafe values are rejected
+* Duplicate configurations are ignored (idempotent behavior)
+* Partial success is supported
+* Detailed debug output explains applied vs rejected parameters
+
+---
+
+### 3.4 Persistence Across Power Cycles
+
+Accepted configuration parameters are stored in non-volatile memory so that:
+
+* Settings survive power loss
+* Device resumes with last valid configuration
+
+---
+
+### 3.5 Cloud-Side Responsibilities
+
+EcoWatt Cloud:
+
+* Issues configuration updates
+* Tracks application status
+* Maintains timestamped logs of configuration history
+
+---
+
+## 4. Part 2 – Command Execution 
+
+### 4.1 Command Execution Workflow
+
+The implemented command pipeline strictly follows the required sequence:
+
+```
+Cloud queues command
+↓
+Next upload cycle
+↓
+EcoWatt Device fetches commands
+↓
+ProtocolAdapter builds Modbus frames
+↓
+Inverter SIM executes command
+↓
+Result returned to device
+↓
+ACK + execution report uploaded to cloud
+```
+
+---
+
+### 4.2 Implementation Details
+
+* Commands are parsed from cloud JSON
+* Each command is converted into a temporary `RequestSIM`
+* Modbus frames are built using `ProtocolAdapter`
+* Frames are executed with retry logic (up to 3 attempts)
+* CRC and Modbus exception handling are enforced
+* Results are logged and acknowledged
+
+---
+
+### 4.3 Auditing and Reporting
+
+Both device and cloud maintain:
+
+* Command ID
+* Target register
+* Timestamp
+* Execution result
+* Failure reason (if any)
+
+---
+
+## 5. Part 3 – Security Layer 
+
+### 5.1 Security Goals
+
+The security layer is:
+
+* Lightweight
+* MCU-friendly
+* Independent of heavyweight crypto libraries
+* Deterministic and auditable
+
+---
+
+### 5.2 Authentication & Integrity
+
+* Pre-Shared Key (PSK) embedded on device
+* Keyed FNV-1a MAC over header + payload
+* Invalid MACs are rejected immediately
+
+---
+
+### 5.3 Confidentiality
+
+* Payloads encrypted using a stream-cipher–style XOR transform
+* Keystream derived from PSK + nonce + sequence number
+* Clean abstraction for future AES/HMAC upgrade
+
+---
+
+### 5.4 Anti-Replay Protection
+
+* Every packet carries a monotonic sequence number
+* Device rejects:
+
+  * Replayed packets
+  * Out-of-order packets
+
+---
+
+### 5.5 Secure Key Handling
+
+* PSK stored locally on device
+* Never transmitted
+* Suitable for ESP8266-class constraints
+
+---
+
+## 6. Part 4 – FOTA Module 
+
+### 6.1 Firmware Update Lifecycle
+
+```
+Upload cycle →
+Check firmware version →
+Download firmware chunks →
+Verify integrity →
+Mark update-in-progress →
+Controlled reboot →
+Verify boot →
+Confirm success OR rollback
+```
+
+---
+
+### 6.2 Chunked Download & Resume
+
+* Firmware is downloaded incrementally
+* Interrupted downloads can resume
+* Progress is logged and reported
+
+---
+
+### 6.3 Verification
+
+* Firmware authenticity and integrity verified before activation
+* Invalid images never boot
+
+---
+
+### 6.4 Controlled Reboot
+
+* Reboot only after successful verification
+* Explicit reboot command issued
+* Automatic reboot disabled during flashing
+
+---
+
+### 6.5 Rollback Mechanism
+
+Rollback is implemented using **RTC memory**:
+
+* Update-in-progress flag
+* Boot counter (max 3 attempts)
+* Failed update tracking
+* Automatic fallback to previous firmware slot
+
+This guarantees **device recovery from faulty firmware**.
+
+---
+
+### 6.6 Failure Demonstration
+
+At least one demo includes:
+
+* Simulated firmware failure
+* Boot failure detection
+* Automatic rollback
+* Confirmation of restored firmware
+
+---
+
+## 7. Power & Reliability Instrumentation
+
+A power estimator continuously tracks:
+
+* CPU active time
+* Wi-Fi usage
+* Sleep time
+* Estimated energy consumption per cycle
+
+This ensures Milestone 4 remains viable for **low-power IoT deployment**.
+
+---
+
+## 8. Part 5 – Demonstration Video 
+
+The Milestone 4 demo video (≤ 10 minutes) includes:
+
+* Runtime configuration update with validation
+* Command execution round-trip
+* Secure transmission (encryption + MAC)
+* Full FOTA update
+* Simulated failure + rollback
+* Presenter visible on camera
+
+*(Presenter has not presented in previous milestone videos.)*
+
+---
+
+## 9. Evaluation Rubric Mapping
+
+| Criterion                    | Coverage                                   |
+| ---------------------------- | ------------------------------------------ |
+| Runtime remote configuration |  Deferred, validated, persistent          |
+| Command execution            |  Cloud → SIM → Cloud                      |
+| Security implementation      |  Auth, integrity, encryption, anti-replay |
+| FOTA + rollback              |  Chunked, verified, RTC rollback          |
+| Video clarity                |  Live demos                               |
+| Documentation quality        |  Complete & accurate                      |
+
+---
+
+## 10. Deliverables Summary
+
+✔ Full embedded source code
+✔ Cloud endpoints
+✔ Runtime configuration support
+✔ Secure command execution
+✔ Security layer
+✔ FOTA with rollback
+✔ Documentation
+✔ Demonstration video
+
 
 
