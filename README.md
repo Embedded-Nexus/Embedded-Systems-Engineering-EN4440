@@ -208,19 +208,6 @@ Function Code 0x06
 
 ---
 
-## Part 3: Demonstration Video 
-
-The demonstration video (2–4 minutes) includes:
-
-* Walkthrough of the protocol adapter
-* Explanation of Modbus message format
-* Error handling and retry logic
-* Acquisition scheduler walkthrough
-* Live read and write round-trip demo
-* Presenter visible on camera
-
-*(Video submitted separately as per instructions)*
-
 ---
 
 ## 5. Test Scenarios
