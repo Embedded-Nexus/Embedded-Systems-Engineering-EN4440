@@ -3,8 +3,6 @@ We are building a small embedded device called EcoWatt Device that pretends it i
 
 # Milestone 2 – Inverter SIM Integration and Basic Acquisition
 
-**EcoWatt Embedded Device**
-
 ---
 
 ## 1. Objective
@@ -296,14 +294,7 @@ g++ -std=c++17 main.cpp -lcurl -o ecowatt_m2
 
 ---
 
-## 10. Conclusion
-
-Milestone 2 successfully demonstrates **robust inverter communication**, **cloud-based Modbus integration**, and **basic data acquisition**, meeting all specified requirements and preparing the system for future milestones involving configuration updates and persistence.
-
-
 # Milestone 3 – Local Buffering, Compression, and Upload Cycle
-
-**EcoWatt Embedded Device**
 
 ---
 
@@ -572,7 +563,5 @@ The design is optimized for embedded deployment:
 
 ---
 
-## 9. Conclusion
 
-Milestone 3 successfully implements **local buffering, lossless compression, aggregation, and a robust upload cycle**, completing the EcoWatt Device’s data pipeline from acquisition to cloud ingestion and preparing the system for secure communication and remote configuration in future milestones.
 
