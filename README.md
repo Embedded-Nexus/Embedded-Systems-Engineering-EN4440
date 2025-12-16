@@ -299,3 +299,266 @@ g++ -std=c++17 main.cpp -lcurl -o ecowatt_m2
 ## 10. Conclusion
 
 Milestone 2 successfully demonstrates **robust inverter communication**, **cloud-based Modbus integration**, and **basic data acquisition**, meeting all specified requirements and preparing the system for future milestones involving configuration updates and persistence.
+
+
+📡 Milestone 3 – Local Buffering, Compression, and Upload Cycle
+
+EcoWatt Embedded Device
+
+1. Objective
+
+The objective of Milestone 3 is to extend the EcoWatt Device with local buffering, lightweight compression, and a periodic upload cycle so that acquired inverter data can be efficiently transmitted to the EcoWatt Cloud while respecting payload constraints.
+
+This milestone demonstrates:
+
+Reliable local buffering across upload windows
+
+Lossless compression with benchmarking
+
+Aggregation for payload control
+
+Robust uplink packetization with retry logic
+
+End-to-end acquisition → compression → upload workflow
+
+2. System Overview
+Inverter SIM
+   |
+   |  (Modbus RTU via Cloud API)
+   v
+EcoWatt Device
+ ├─ Acquisition (5 s)
+ ├─ Local Buffer
+ ├─ Compression + Aggregation
+ ├─ Packetizer + Retry Logic
+   |
+   |  (HTTP JSON Upload)
+   v
+EcoWatt Cloud API
+
+
+For demonstration purposes, the 15-minute upload interval is simulated using a 15-second window, as allowed by the milestone specification.
+
+3. Scope Implementation Mapping
+Part 1: Buffer Implementation 
+3.1 Local Buffer Design
+
+A modular local buffer is implemented to store all samples acquired during the upload interval without data loss.
+
+Key properties:
+
+Fixed capacity with overflow handling
+
+Decoupled from acquisition and transport logic
+
+FIFO behavior with snapshot extraction
+
+Event callbacks for buffer health monitoring
+
+Implemented in:
+
+SampleBuffer module (Buffer.cpp)
+
+Stored data structure:
+
+Timestamp
+
+Register address
+
+Quantized sample value (uint16)
+
+This design ensures safe accumulation of samples across upload cycles and is suitable for MCU memory constraints.
+
+3.2 Data Integrity
+
+Overflow events are detected and logged
+
+Buffer watermarks provide early warning of capacity pressure
+
+Samples are only removed after successful upload finalization
+
+This satisfies the data integrity requirement of the rubric.
+
+Part 2: Compression Algorithm and Benchmarking 
+4.1 Compression Methods Implemented
+
+At least one lightweight compression technique is required. This implementation includes two:
+
+Delta-16 Variable Length Compression
+
+First sample stored absolute
+
+Subsequent samples stored as delta values
+
+Zig-zag + variable-length encoding
+
+Time-Series Frame Compression
+
+Frame-based compression across multiple registers
+
+Small deltas packed into 4-bit values
+
+Absolute fallback for large deltas
+
+Implemented in:
+
+Delta16VarCompressor
+
+TimeSeriesCompressor
+
+4.2 Benchmarking Methodology
+
+Compression is benchmarked on real inverter data collected from the Inverter SIM.
+
+Measured fields:
+
+Compression method used
+
+Number of samples
+
+Original payload size
+
+Compressed payload size
+
+Compression ratio
+
+CPU time (microseconds)
+
+Lossless recovery verification
+
+Benchmarking is executed at runtime and printed to the serial console during each upload window.
+
+4.3 Example Benchmark Report (Runtime Output)
+Compression Method Used: TimeSeries
+Number of Samples: 300
+Original Payload Size: 600 bytes
+Compressed Payload Size: 148 bytes
+Compression Ratio: 4.05x
+CPU Time: compress=312 us, decompress=227 us
+Lossless Recovery Verification: PASS
+
+4.4 Lossless Verification
+
+All compressed payloads are:
+
+Decompressed immediately after compression
+
+Byte-compared with original samples
+
+Uploads proceed only if lossless verification passes, satisfying the milestone requirement.
+
+4.5 Aggregation (Min / Avg / Max)
+
+To support payload caps, aggregation is implemented per register:
+
+Minimum
+
+Average
+
+Maximum
+
+Sample count
+
+Implemented in:
+
+Aggregation module
+
+Aggregation results are logged and available for future cloud-side analytics, even though raw samples are still uploaded as required.
+
+Part 3: Uplink Packetizer and Upload Cycle 
+5.1 Upload Cycle
+
+The upload cycle follows the required workflow:
+
+Upload Tick →
+  Finalize buffer →
+  Aggregate →
+  Compress →
+  Encrypt (stub) →
+  Chunk →
+  Upload →
+  Await ACK
+
+
+Upload interval: 15 seconds (demo mode)
+
+Each upload corresponds to one finalized buffer window
+
+5.2 Packetizer Design
+
+The packetizer:
+
+Encodes compressed data in Base64
+
+Splits payload into chunks
+
+Includes metadata (device ID, sequence number, timestamps)
+
+Retries failed uploads with exponential backoff
+
+Implemented in:
+
+EcoWattUploader
+
+Retry logic:
+
+Configurable max retries
+
+ACK-based success detection
+
+Partial failure reporting
+
+5.3 Encryption Stub
+
+A placeholder encryption + MAC interface is implemented:
+
+Compression output is passed through an encryption stub
+
+MAC field is generated and transmitted
+
+Interface is future-ready for Milestone 4 security integration
+
+5.4 Cloud API Implementation
+
+A custom EcoWatt Cloud API endpoint is implemented to:
+
+Accept uplink payloads
+
+Validate request format
+
+Return ACK responses
+
+Both client and server sides are implemented as required.
+
+
+6. Evaluation Rubric Mapping
+Criterion	Coverage
+Buffering & data integrity	: Modular buffer + overflow handling
+Compression & benchmarking	: Two methods + runtime benchmarks
+Packetizer & upload robustness : Chunking + retry + ACK
+Cloud API implementation : Client + server implemented
+Video clarity & demo	: Full live workflow
+Code modularity & MCU readiness : Clean separation of modules
+7. MCU Readiness
+
+The design is optimized for embedded deployment:
+
+Fixed-size buffers
+
+Minimal dynamic allocation
+
+Simple data structures
+
+Clear separation of acquisition, buffering, compression, and transport
+
+8. Deliverables Summary
+
+✔ Source code (buffer, compression, uploader)
+✔ Cloud API endpoint
+✔ Compression benchmark report (runtime)
+✔ Demonstration video
+✔ GitHub repository
+
+9. Conclusion
+
+Milestone 3 successfully implements local buffering, lossless compression, aggregation, and a robust upload cycle, completing the EcoWatt Device’s data pipeline from acquisition to cloud ingestion and preparing the system for secure communication and remote configuration in future milestones.
