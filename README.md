@@ -880,5 +880,238 @@ The Milestone 4 demo video (≤ 10 minutes) includes:
 ✔ Documentation
 ✔ Demonstration video
 
+# Milestone 5 – Fault Recovery, Power Optimization & Final Integration
+
+**EcoWatt Embedded Device**
+
+---
+
+## 1. Objective
+
+The objective of **Milestone 5** is to finalize the EcoWatt system by integrating **power optimization**, **fault recovery**, and **end-to-end system validation**.
+This milestone demonstrates that all features developed in Milestones 1–4 operate together reliably under both normal and fault conditions, while minimizing power consumption.
+
+No new architecture was introduced in this milestone; instead, the **Milestone 4 codebase was extended and validated** to meet all Milestone 5 requirements.
+
+---
+
+## 2. Integrated System Overview
+
+```
+EcoWatt Cloud
+ ├─ Data Upload API
+ ├─ Configuration API
+ ├─ Command Queue API
+ ├─ Firmware API
+ ├─ Logs & Audit
+ |
+ |  Secure JSON / Binary Payloads
+ v
+EcoWatt Device (ESP8266)
+ ├─ Polling & Acquisition
+ ├─ Local Buffers
+ ├─ Compression & Aggregation
+ ├─ Security Layer (Auth, Encrypt, Anti-Replay)
+ ├─ Upload Manager
+ ├─ Runtime Configuration Manager
+ ├─ Command Execution Engine
+ ├─ FOTA + Rollback
+ ├─ Power Estimator
+ ├─ Fault & Event Logger
+ |
+ v
+Inverter SIM
+```
+---
+
+## 3. Part 1 – Power Management & Measurement 
+
+### 3.1 Power-Saving Mechanisms Implemented
+
+The EcoWatt Device applies the following power-saving techniques:
+
+* **Sleep / Idle Between Operations**
+
+  * Polling and upload are timer-driven
+  * Device remains idle between scheduled activities
+  * `yield()` used to avoid busy waiting
+
+* **Peripheral Gating**
+
+  * Wi-Fi enabled only during upload windows
+  * HTTP clients instantiated and destroyed per cycle
+  * No persistent network connections
+
+* **Task Consolidation**
+
+  * Firmware update, upload, configuration, and command handling executed within a single upload window
+
+---
+
+### 3.2 Self-Energy-Use Reporting
+
+A lightweight **power estimator** is implemented to measure:
+
+* CPU time spent on compression
+* CPU time spent on encryption/decryption
+* Active processing duration per cycle
+
+This provides a practical estimate of energy usage suitable for MCU-class devices.
+
+---
+
+### 3.3 Power Measurement Report
+
+Power savings were evaluated by comparing:
+
+* System behavior before optimization (continuous activity)
+* Optimized behavior (interval-based polling and uploads)
+
+A short power report summarizes:
+
+* CPU active time per cycle
+* Relative duty-cycle reduction
+* Estimated energy savings
+
+---
+
+## 4. Part 2 – Fault Recovery 
+
+### 4.1 Fault Handling Capabilities
+
+The system robustly handles the following fault scenarios:
+
+* Inverter SIM timeouts
+* Malformed Modbus frames
+* Corrupted or invalid JSON payloads
+* Network outages during upload
+* Buffer pressure / low-memory conditions
+* FOTA verification failures
+
+All faults are handled **gracefully**, without system crashes or data loss.
+
+---
+
+### 4.2 Local Event Logging
+
+A local event log is maintained on the device, recording:
+
+* Timestamp
+* Fault type
+* Recovery action taken
+
+The log buffer is circular and bounded, ensuring reliability on MCU-class hardware.
+
+---
+
+### 4.3 Fault Injection Methodology
+
+Faults were injected using **Postman**, as allowed by the milestone specification, by sending:
+
+* Malformed JSON payloads
+* Corrupted encrypted uploads
+* Invalid configuration updates
+* Interrupted firmware update metadata
+* Simulated network failures
+
+This approach simulates real-world production faults without modifying firmware.
+
+---
+
+### 4.4 Fault Injection Test Summary
+
+| Fault Scenario           | Injection Method     | Observed Behavior     |
+| ------------------------ | -------------------- | --------------------- |
+| SIM timeout              | Dropped API response | Retry + continue      |
+| Malformed config JSON    | Invalid body         | Rejected + logged     |
+| Corrupted upload payload | Modified bytes       | MAC failure, rejected |
+| Network outage           | Wi-Fi disabled       | Buffer retained       |
+| FOTA hash mismatch       | Invalid firmware     | Update aborted        |
+| FOTA boot failure        | Simulated failure    | Rollback executed     |
+
+All tests resulted in **correct recovery behavior**.
+
+---
+
+## 5. Part 3 – Final Integration & System Testing 
+
+### 5.1 Unified Firmware
+
+A single firmware build integrates:
+
+* Acquisition
+* Buffering
+* Compression
+* Secure upload
+* Remote configuration
+* Command execution
+* FOTA with rollback
+* Power estimation
+* Fault logging
+
+This satisfies the **full integration requirement**.
+
+---
+
+### 5.2 End-to-End Workflow
+
+```
+Acquire →
+Buffer →
+Compress →
+Encrypt →
+Upload →
+Fetch Config →
+Apply Config →
+Fetch Commands →
+Execute →
+ACK →
+FOTA Check →
+Sleep
+```
+
+This workflow was validated under both normal and fault conditions.
+
+---
+
+## 6. Part 4 – Live Demonstration 
+
+The live demonstration verified all features using a checklist, including:
+
+* Normal acquisition and upload
+* Remote configuration updates
+* Command execution round-trip
+* Secure transmission (encrypted payloads)
+* FOTA update success
+* FOTA failure with rollback
+* Network fault recovery
+
+The presenter was visible on camera and followed the provided checklist.
+
+---
+
+## 7. Evaluation Rubric Mapping
+
+| Criterion                         | Coverage                  |
+| --------------------------------- | ------------------------- |
+| Power savings & measurement       |  Implemented + reported  |
+| End-to-end integration & recovery |  Fully demonstrated      |
+| Video clarity & demo              |  Checklist-based         |
+| Documentation quality             |  Complete & structured   |
+| Code modularity & MCU readiness   |  Clean, unified firmware |
+
+---
+
+## 8. Deliverables Summary
+
+✔ Full integrated firmware source code
+✔ Power measurement report
+✔ Fault injection test documentation
+✔ Demonstration video
+✔ GitHub repository
+
+---
+
+
 
 
