@@ -753,8 +753,6 @@ The security layer is:
 
 ## 6. Part 4 – FOTA Module 
 
-### 6.1 Firmware Update Lifecycle
-
 ```
 Upload cycle →
 Check firmware version →
@@ -762,86 +760,8 @@ Download firmware chunks →
 Verify integrity →
 Mark update-in-progress →
 Controlled reboot →
-Verify boot →
-Confirm success OR rollback
+rollback if required
 ```
-
----
-
-### 6.2 Chunked Download & Resume
-
-* Firmware is downloaded incrementally
-* Interrupted downloads can resume
-* Progress is logged and reported
-
----
-
-### 6.3 Verification
-
-* Firmware authenticity and integrity verified before activation
-* Invalid images never boot
-
----
-
-### 6.4 Controlled Reboot
-
-* Reboot only after successful verification
-* Explicit reboot command issued
-* Automatic reboot disabled during flashing
-
----
-
-### 6.5 Rollback Mechanism
-
-Rollback is implemented using **RTC memory**:
-
-* Update-in-progress flag
-* Boot counter (max 3 attempts)
-* Failed update tracking
-* Automatic fallback to previous firmware slot
-
-This guarantees **device recovery from faulty firmware**.
-
----
-
-### 6.6 Failure Demonstration
-
-At least one demo includes:
-
-* Simulated firmware failure
-* Boot failure detection
-* Automatic rollback
-* Confirmation of restored firmware
-
----
-
-## 7. Power & Reliability Instrumentation
-
-A power estimator continuously tracks:
-
-* CPU active time
-* Wi-Fi usage
-* Sleep time
-* Estimated energy consumption per cycle
-
-This ensures Milestone 4 remains viable for **low-power IoT deployment**.
-
----
-
-## 8. Part 5 – Demonstration Video 
-
-The Milestone 4 demo video (≤ 10 minutes) includes:
-
-* Runtime configuration update with validation
-* Command execution round-trip
-* Secure transmission (encryption + MAC)
-* Full FOTA update
-* Simulated failure + rollback
-* Presenter visible on camera
-
-*(Presenter has not presented in previous milestone videos.)*
-
----
 
 ## 9. Evaluation Rubric Mapping
 
