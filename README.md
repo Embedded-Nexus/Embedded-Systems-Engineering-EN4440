@@ -882,8 +882,6 @@ The Milestone 4 demo video (≤ 10 minutes) includes:
 
 # Milestone 5 – Fault Recovery, Power Optimization & Final Integration
 
-**EcoWatt Embedded Device**
-
 ---
 
 ## 1. Objective
