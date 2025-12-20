@@ -8,11 +8,12 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/include",
-                "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/src",
+                "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/include",
+                "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/src",
                 "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266httpUpdate/src",
                 "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266HTTPClient/src",
                 "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
+                "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/.pio/libdeps/nodemcuv2/ArduinoJson/src",
                 "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
                 "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/cores/esp8266",
                 "C:/Users/dinuj/.platformio/packages/toolchain-xtensa/include",
@@ -57,11 +58,12 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/include",
-                    "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/src",
+                    "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/include",
+                    "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/src",
                     "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266httpUpdate/src",
                     "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266HTTPClient/src",
                     "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
+                    "E:/UoM/Sem07/Embedded/Repo/Embedded-Systems-Engineering-EN4440/Ecowatt_all_FOTA/.pio/libdeps/nodemcuv2/ArduinoJson/src",
                     "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
                     "C:/Users/dinuj/.platformio/packages/framework-arduinoespressif8266/cores/esp8266",
                     "C:/Users/dinuj/.platformio/packages/toolchain-xtensa/include",
@@ -109,10 +111,6 @@
                 "ESP8266",
                 "ARDUINO_ARCH_ESP8266",
                 "ARDUINO_ESP8266_NODEMCU_ESP12E",
-                "PIO_FRAMEWORK_ARDUINO_LWIP2_LOW_MEMORY",
-                "VTABLES_IN_FLASH",
-                "SERIAL_TX_BUFFER_SIZE=256",
-                "SERIAL_RX_BUFFER_SIZE=256",
                 "F_CPU=80000000L",
                 "__ets__",
                 "ICACHE_FLASH",
@@ -126,6 +124,7 @@
                 "TCP_MSS=536",
                 "LWIP_FEATURES=1",
                 "LWIP_IPV6=0",
+                "VTABLES_IN_FLASH",
                 "MMU_IRAM_SIZE=0x8000",
                 "MMU_ICACHE_SIZE=0x8000",
                 ""
